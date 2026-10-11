@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 const { test, expect } = require('@playwright/test');
-const { ROOT, appConfig, slug, prefix, once, open, storage, copyOfApp, bouw, allFiles, expectNoProblems } = require('./helpers');
+const { ROOT, appConfig, slug, prefix, sitePath, once, open, storage, copyOfApp, bouw, allFiles, expectNoProblems } = require('./helpers');
 
 test.beforeEach(async ({}, info) => once(info));
 
@@ -170,9 +170,10 @@ test.describe('bouwdoel webportal', () => {
   });
 });
 
-test('hoofdsite: privacy en verwijderen op studiosedillo.com/<slug>/, met terug naar de hoofdsite', async ({ page }) => {
-  const base = `./dist/hoofdsite/${slug()}/`;
-  const files = allFiles(path.join(DIST, 'hoofdsite', slug()));
+test('hoofdsite: privacy en verwijderen op studiosedillo.com/<app>/, met terug naar de hoofdsite', async ({ page }) => {
+  const base = `./dist/hoofdsite/${sitePath()}/`;
+  expect(sitePath()).toMatch(/^[a-z0-9][a-z0-9-]*$/);
+  const files = allFiles(path.join(DIST, 'hoofdsite', sitePath()));
   for (const gone of ['index.html', 'app.js', 'sw.js', 'manifest.webmanifest']) expect(files, gone).not.toContain(gone);
   const problems = await open(page, base + 'privacy?lang=nl');
   await expect(page.locator('#page-text h1')).toHaveText('Privacyverklaring');
@@ -201,6 +202,7 @@ test('Capacitor: package-naam, de map van het bouwdoel en de scripts', async () 
   expect(Object.keys({ ...pkg.dependencies, ...pkg.devDependencies }).filter(d => /admob|ads/i.test(d))).toEqual([]);
   const build = JSON.parse(fs.readFileSync(path.join(ROOT, 'bouw.config.json'), 'utf8'));
   expect(build.web).toEqual({ live: false, domein: `${slug()}.studiosedillo.com` });
+  expect(build.portals, 'geen portal zonder akkoord').toEqual([]);
 });
 
 test('CLAUDE.md van de app verwijst naar de sectie "App-structuur Studio Sedillo"', async () => {

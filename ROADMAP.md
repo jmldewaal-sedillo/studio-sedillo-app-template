@@ -18,12 +18,12 @@ Volg `docs/lanceren.md`; dat is de checklist van idee tot lancering.
 - [ ] Op een echte telefoon proberen via het testadres
 
 ## Later / ideeën
-- [ ] Webportals (CrazyGames, Poki, …): eerst de voorwaarden lezen, niets inbouwen zonder akkoord (`docs/portals.md`)
+- [ ] Webportals (CrazyGames, Poki, …): eerst de voorwaarden lezen, niets inbouwen zonder akkoord (`docs/webportals.md`)
 - [ ] Webversie op {{SLUG}}.studiosedillo.com: pas als Jenn "lanceren web" zegt
 
 ## Voor publicatie in Google Play
 Uitleg per punt: `docs/publiceren.md`.
-- [ ] Privacyverklaring en verwijderpagina live op https://studiosedillo.com/{{SLUG}}/privacy en https://studiosedillo.com/{{SLUG}}/delete
+- [ ] Privacyverklaring en verwijderpagina live op https://studiosedillo.com/{{REPO}}/privacy en https://studiosedillo.com/{{REPO}}/delete
 - [ ] Data Safety ingevuld
 - [ ] Store-teksten, icoon, feature graphic, screenshots
 - [ ] Android-app gebouwd met Capacitor en getest in de interne test

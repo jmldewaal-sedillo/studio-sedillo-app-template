@@ -13,6 +13,8 @@ function appConfig() {
 }
 const slug = () => appConfig().SLUG;
 const prefix = () => slug() + '.';
+// De map van de app op de hoofdsite: studiosedillo.com/<sitePath>/privacy.
+const sitePath = () => JSON.parse(fs.readFileSync(path.join(ROOT, 'bouw.config.json'), 'utf8')).hoofdsite.pad;
 
 /** De meeste tests hoeven maar op één formaat te draaien. */
 function once(info) {
@@ -111,4 +113,4 @@ function expectNoProblems(problems) {
   expect(problems, `Problemen tijdens laden of gebruiken:\n${problems.join('\n')}`).toEqual([]);
 }
 
-module.exports = { ROOT, BASE, appConfig, slug, prefix, once, open, kinderApp, storage, hold, textFiles, copyOfApp, bouw, allFiles, expectNoProblems };
+module.exports = { ROOT, BASE, appConfig, slug, prefix, sitePath, once, open, kinderApp, storage, hold, textFiles, copyOfApp, bouw, allFiles, expectNoProblems };

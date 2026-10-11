@@ -3,5 +3,8 @@
     "live": false,
     "domein": "{{SLUG}}.studiosedillo.com"
   },
+  "hoofdsite": {
+    "pad": "{{REPO}}"
+  },
   "portals": []
 }

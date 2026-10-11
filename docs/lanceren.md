@@ -48,8 +48,9 @@ als Jenn "lanceren web" zegt.
 Pas bij de lancering, na akkoord van Jenn (dit gaat live op studiosedillo.com).
 
 - [ ] `npm run bouw:hoofdsite` en daarna, vanuit `Apps/`:
-      `tools/hoofdsite-toevoegen.sh --dry-run --slug {{SLUG}} …` en dan echt.
-- [ ] https://studiosedillo.com/{{SLUG}}/privacy en https://studiosedillo.com/{{SLUG}}/delete
+      `tools/hoofdsite-toevoegen.sh --dry-run --app {{REPO}} --paginas {{REPO}}/dist/hoofdsite/{{REPO}}`
+      en dan echt.
+- [ ] https://studiosedillo.com/{{REPO}}/privacy en https://studiosedillo.com/{{REPO}}/delete
       werken, in EN en NL (plus de grote talen van de app).
 - [ ] Controleren dat het EU-U.S. Data Privacy Framework nog geldt (de tekst gaat daarvan uit).
 
@@ -62,7 +63,7 @@ Pas bij de lancering, na akkoord van Jenn (dit gaat live op studiosedillo.com).
 - [ ] Productietoegang aanvragen en de productierelease doen.
 - [ ] Daarna pas: de app bij de spellen op studiosedillo.com.
 
-## 7. Webportals (`docs/portals.md`) – na Android
+## 7. Webportals (`docs/webportals.md`) – na Android
 
 - [ ] Per portal de voorwaarden over exclusiviteit en advertenties gelezen en aan Jenn
       voorgelegd. **Niets inbouwen zonder akkoord**, ook geen SDK.

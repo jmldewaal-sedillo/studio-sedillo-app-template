@@ -9,8 +9,8 @@ lancering in `docs/lanceren.md`.
 | | |
 |---|---|
 | Testversie | https://jmldewaal-sedillo.github.io/{{REPO}}-test/ (noindex, nergens naar gelinkt) |
-| Privacyverklaring | https://studiosedillo.com/{{SLUG}}/privacy (na de lancering) |
-| Gegevens verwijderen | https://studiosedillo.com/{{SLUG}}/delete (na de lancering) |
+| Privacyverklaring | https://studiosedillo.com/{{REPO}}/privacy (na de lancering) |
+| Gegevens verwijderen | https://studiosedillo.com/{{REPO}}/delete (na de lancering) |
 | Repo | https://github.com/jmldewaal-sedillo/{{REPO}} (remote `origin`) |
 | Repo testversie | https://github.com/jmldewaal-sedillo/{{REPO}}-test (remote `test`) |
 | Android package | `com.studiosedillo.{{SLUG}}` |
@@ -21,7 +21,7 @@ lancering in `docs/lanceren.md`.
 | Bouwdoel | Commando | Uitkomst |
 |---|---|---|
 | android | `npm run android:sync` | `dist/android/` in het Android-project (Capacitor); zie `docs/android.md` |
-| webportal | `node tools/bouw.mjs portal <naam>` | `dist/portal-<naam>.zip`; zie `docs/portals.md` |
+| webportal | `node tools/bouw.mjs portal <naam>` | `dist/portal-<naam>.zip`; zie `docs/webportals.md` |
 | testversie | `git push test HEAD:main` | de workflow publiceert op github.io |
 | hoofdsite | `npm run bouw:hoofdsite` | de pagina's privacy en verwijderen voor studiosedillo.com |
 | web (later) | `web.live` in `bouw.config.json` | PWA op {{SLUG}}.studiosedillo.com, pas na "lanceren web" |

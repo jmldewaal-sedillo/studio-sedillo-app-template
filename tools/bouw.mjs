@@ -2,10 +2,10 @@
 // (platform/<doel>.js). Zie Apps/CLAUDE.md, sectie 11, "App-structuur Studio Sedillo".
 //
 //   node tools/bouw.mjs android              -> dist/android/            voor Capacitor (docs/android.md)
-//   node tools/bouw.mjs portal <naam>        -> dist/portal-<naam>.zip   upload voor een webportal (docs/portals.md)
+//   node tools/bouw.mjs portal <naam>        -> dist/portal-<naam>.zip   upload voor een webportal (docs/webportals.md)
 //   node tools/bouw.mjs test [commit]        -> dist/test/               testversie voor github.io, altijd noindex
 //   node tools/bouw.mjs web                  -> dist/web/                PWA voor <slug>.studiosedillo.com ("lanceren web")
-//   node tools/bouw.mjs hoofdsite            -> dist/hoofdsite/<slug>/   privacy en verwijderen voor studiosedillo.com
+//   node tools/bouw.mjs hoofdsite            -> dist/hoofdsite/<app>/    privacy en verwijderen voor studiosedillo.com/<app>/
 //   node tools/bouw.mjs pages <repo> [commit]   wat de workflow publiceert: de testversie voor <repo>-test,
 //                                               de webversie voor <repo> als web.live aan staat, anders niets
 //   node tools/bouw.mjs moet-publiceren <repo>  print true of false
@@ -142,7 +142,7 @@ function bouwPortal(naam) {
   if (!/^[a-z0-9-]+$/.test(naam || '')) fail('geef de naam van de portal in kleine letters: node tools/bouw.mjs portal <naam>');
   const out = outDir(`portal-${naam}`);
   copyTree(ROOT, out, name => NOT_IN_APP.has(name) || name === '.nojekyll');
-  // De SDK-laag van deze portal, als die er is (alleen na akkoord van Jenn; zie docs/portals.md).
+  // De SDK-laag van deze portal, als die er is (alleen na akkoord van Jenn; zie docs/webportals.md).
   const extra = [];
   if (existsSync(join(ROOT, 'platform', 'portals', `${naam}.js`))) {
     mkdirSync(join(out, 'platform', 'portals'), { recursive: true });
@@ -187,7 +187,10 @@ function bouwWebOfTest(soort, commit = '', repo = '') {
 }
 
 function bouwHoofdsite() {
-  const out = join(outDir('hoofdsite'), SLUG);
+  // De map op de hoofdsite heet naar de app (de repo-naam), bijvoorbeeld studiosedillo.com/sudoku-kids/.
+  const pad = BUILD_CONFIG.hoofdsite && BUILD_CONFIG.hoofdsite.pad;
+  if (!/^[a-z0-9][a-z0-9-]*$/.test(pad || '')) fail(`bouw.config.json: hoofdsite.pad moet kleine letters, cijfers en streepjes zijn: "${pad}"`);
+  const out = join(outDir('hoofdsite'), pad);
   mkdirSync(out, { recursive: true });
   const NEEDED = new Set(['privacy.html', 'delete.html', 'verwijderen.html', 'redirect.js', 'style.css', 'config.js', 'storage.js', 'common.js', 'pages.js', 'i18n', 'icons']);
   copyTree(ROOT, out, name => !NEEDED.has(name));
@@ -195,7 +198,7 @@ function bouwHoofdsite() {
   finishPages(out, { platform: 'hoofdsite', noindex: CONFIG.VINDBAAR !== true, serviceWorker: false });
   rmSync(join(out, 'robots.txt'), { force: true });      // een robots.txt in een submap doet niets; de noindex-regel staat in de pagina's
   mustExist(out, ['privacy.html', 'delete.html', 'platform/hoofdsite.js']);
-  console.log(`Hoofdsite: ${relative(process.cwd(), out)} -> studiosedillo.com/${SLUG}/privacy en /${SLUG}/delete`);
+  console.log(`Hoofdsite: ${relative(process.cwd(), out)} -> studiosedillo.com/${pad}/privacy en /${pad}/delete`);
 }
 
 // De testversie komt van de repo <naam>-test; de webversie van <naam>, alleen na "lanceren web".

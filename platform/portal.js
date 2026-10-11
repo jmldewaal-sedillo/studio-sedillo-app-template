@@ -5,7 +5,7 @@
 //
 // Dit bestand bevat GEEN SDK en doet geen enkel verzoek naar buiten. De SDK van een portal
 // komt in platform/portals/<naam>.js en alleen na akkoord van Jenn (eerst de voorwaarden over
-// exclusiviteit en advertenties lezen). Zie docs/portals.md en platform/web.js.
+// exclusiviteit en advertenties lezen). Zie docs/webportals.md en platform/web.js.
 // ============================================================
 window.Platform = {
   DOEL: 'portal',

@@ -1,6 +1,6 @@
 // ============================================================
 // {{APP_NAAM}} – platform/hoofdsite.js
-// De dunne laag voor de pagina's privacy en verwijderen op studiosedillo.com/{{SLUG}}/.
+// De dunne laag voor de pagina's privacy en verwijderen op studiosedillo.com/{{REPO}}/.
 // Dat zijn de adressen voor de Play Store. De app zelf staat daar niet: "terug" gaat naar
 // de hoofdsite. Zie platform/web.js.
 // ============================================================

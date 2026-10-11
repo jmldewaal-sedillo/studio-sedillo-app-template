@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const { test, expect } = require('@playwright/test');
-const { ROOT, appConfig, slug, once, open, kinderApp, expectNoProblems } = require('./helpers');
+const { ROOT, appConfig, slug, sitePath, once, open, kinderApp, expectNoProblems } = require('./helpers');
 
 test.beforeEach(async ({}, info) => once(info));
 
@@ -119,8 +119,8 @@ test('ROADMAP, docs en store-teksten zijn aanwezig en binnen de limieten van Goo
     expect(roadmap, head).toContain(head);
   }
   expect(roadmap, 'het testadres op github.io').toMatch(/https:\/\/jmldewaal-sedillo\.github\.io\/[A-Za-z0-9._-]+-test\//);
-  expect(roadmap, 'de URL voor de Play Store').toContain(`https://studiosedillo.com/${slug()}/privacy`);
-  for (const doc of ['lanceren.md', 'privacy-audit.md', 'credits.md', 'android.md', 'portals.md', 'publiceren.md']) {
+  expect(roadmap, 'de URL voor de Play Store').toContain(`https://studiosedillo.com/${sitePath()}/privacy`);
+  for (const doc of ['lanceren.md', 'privacy-audit.md', 'credits.md', 'android.md', 'webportals.md', 'publiceren.md']) {
     expect(fs.existsSync(path.join(ROOT, 'docs', doc)), doc).toBe(true);
   }
   const LIMITS = { 'titel.txt': 30, 'korte-beschrijving.txt': 80, 'volledige-beschrijving.txt': 4000 };

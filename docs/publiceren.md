@@ -10,8 +10,8 @@ Vaste gegevens:
 - Uitgever: **Studio Sedillo**, contact **studio.sedillo@gmail.com**.
 - De app is een Android-app (Capacitor, alle bestanden in de app); er is geen app-website.
 - Package name: **com.studiosedillo.{{SLUG}}**
-- Privacybeleid: `https://studiosedillo.com/{{SLUG}}/privacy`
-- Gegevens verwijderen: `https://studiosedillo.com/{{SLUG}}/delete`
+- Privacybeleid: `https://studiosedillo.com/{{REPO}}/privacy`
+- Gegevens verwijderen: `https://studiosedillo.com/{{REPO}}/delete`
 
 Nog te besluiten (vul in):
 
@@ -44,7 +44,7 @@ Nog te besluiten (vul in):
 
 Bron: [User Data-beleid][userdata]. Ook apps die geen gegevens verzamelen moeten er een hebben.
 
-- [ ] Live op `https://studiosedillo.com/{{SLUG}}/privacy`: openbaar, geen pdf. (De app toont
+- [ ] Live op `https://studiosedillo.com/{{REPO}}/privacy`: openbaar, geen pdf. (De app toont
       dezelfde tekst zelf, ook zonder internet.)
 - [ ] In minimaal EN en NL, plus de grote talen van de app.
 - [ ] De lijst "Wat er wordt bewaard, en waar" in `i18n/*.js` klopt met `docs/privacy-audit.md`.
@@ -63,7 +63,7 @@ Deze app heeft geen accounts; we voldoen er toch aan.
 
 - [ ] In de app: "Profiel verwijderen" en "Alle gegevens van deze app verwijderen" werken
       (`tests/wissen.spec.js` is groen).
-- [ ] Webpagina live op `https://studiosedillo.com/{{SLUG}}/delete`; de stappen op de pagina
+- [ ] Webpagina live op `https://studiosedillo.com/{{REPO}}/delete`; de stappen op de pagina
       kloppen met waar de knoppen in de app echt zitten.
 - [ ] De link ingevuld in Play Console (Data safety → gegevens verwijderen).
 
@@ -77,8 +77,8 @@ Bron: [Data safety][datasafety]. Verplicht voor elke track behalve interne test.
 |---|---|
 | Verzamelt of deelt je app een van de vereiste soorten gebruikersgegevens? | **Nee**, zolang de audit zegt dat niets het toestel verlaat |
 | Kunnen gebruikers in je app een account aanmaken? | **Nee**: een profiel op het toestel is geen account |
-| URL voor het verwijderen van gegevens | `https://studiosedillo.com/{{SLUG}}/delete` |
-| Privacybeleid-URL | `https://studiosedillo.com/{{SLUG}}/privacy` |
+| URL voor het verwijderen van gegevens | `https://studiosedillo.com/{{REPO}}/delete` |
+| Privacybeleid-URL | `https://studiosedillo.com/{{REPO}}/privacy` |
 
 - [ ] Ingevuld. Opnieuw invullen zodra er ooit iets het toestel verlaat.
 
