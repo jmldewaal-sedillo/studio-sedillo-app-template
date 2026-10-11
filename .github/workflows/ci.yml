@@ -1,0 +1,100 @@
+name: Testen en publiceren
+
+# Elke push: de tests draaien.
+# Push naar main: zijn de tests groen, dan gaat de app naar GitHub Pages.
+#   repo <naam>        -> https://<slug>.studiosedillo.com        (live)
+#   repo <naam>-test   -> https://test-<slug>.studiosedillo.com   (test)
+# Het adres (CNAME) verschilt dus per repo; tools/bouw-site.mjs regelt dat.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      template: ${{ steps.soort.outputs.template }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Template of app?
+        id: soort
+        run: |
+          if [ -f .template ]; then echo "template=true" >> "$GITHUB_OUTPUT"; else echo "template=false" >> "$GITHUB_OUTPUT"; fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installeer dependencies
+        run: npm ci
+
+      - name: Installeer Playwright-browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Playwright-tests
+        run: npm test
+
+      - name: Upload screenshots en rapport
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: testresultaat
+          path: |
+            tests/screenshots/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  deploy:
+    name: Publiceren op GitHub Pages
+    needs: test
+    # Alleen main, alleen als de tests groen zijn, en nooit vanuit de template zelf.
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && needs.test.outputs.template == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Site klaarzetten (met het adres van deze repo)
+        run: node tools/bouw-site.mjs _site "${{ github.event.repository.name }}" "$GITHUB_SHA"
+
+      # Zelf inpakken in plaats van actions/upload-pages-artifact: die laat bestanden en mappen
+      # die met een punt beginnen weg, en dan ontbreekt .well-known/assetlinks.json.
+      - name: Inpakken
+        run: tar --dereference --hard-dereference --directory _site -cf "$RUNNER_TEMP/artifact.tar" .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: github-pages
+          path: ${{ runner.temp }}/artifact.tar
+          retention-days: 1
+          if-no-files-found: error
+
+      - name: Publiceren
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Adres in de samenvatting
+        run: echo "Gepubliceerd op https://$(cat _site/CNAME) (${GITHUB_SHA::7})" >> "$GITHUB_STEP_SUMMARY"

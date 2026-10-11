@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "description": "Studio Sedillo app",
+  "scripts": {
+    "serve": "node tools/serve.mjs 5000",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "iconen": "node tools/maak-iconen.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}

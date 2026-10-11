@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.studiosedillo.{{SLUG}}",
+      "sha256_cert_fingerprints": [
+        "VERVANG:DOOR:DE:SHA-256:VINGERAFDRUK:UIT:PLAY:CONSOLE:ZIE:DOCS:TWA.MD"
+      ]
+    }
+  }
+]

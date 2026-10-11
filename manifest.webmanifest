@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "{{APP_NAAM}}",
+  "short_name": "{{KORTE_NAAM}}",
+  "description": "{{APP_NAAM}} – Studio Sedillo",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "{{THEMA_KLEUR}}",
+  "theme_color": "{{THEMA_KLEUR}}",
+  "lang": "nl",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

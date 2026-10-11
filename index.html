@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="{{THEMA_KLEUR}}" />
+  <title>{{APP_NAAM}}</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Own icons (no emoji, no icon set from outside). Use: <svg class="icon"><use href="#i-gear" /></svg> -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-gear" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8.6" fill="none" stroke="currentColor" stroke-width="3.4" stroke-dasharray="3.38 3.38" />
+      <circle cx="12" cy="12" r="5.6" fill="none" stroke="currentColor" stroke-width="3.2" />
+    </symbol>
+    <symbol id="i-back" viewBox="0 0 24 24">
+      <path d="M15 4.5 7.5 12l7.5 7.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24">
+      <path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 12.5h9l1-12.5M10 10.5v6M14 10.5v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    </symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24">
+      <rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="currentColor" />
+      <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+    </symbol>
+  </svg>
+
+  <div id="test-strip" hidden data-i18n="testLabel">TEST</div>
+
+  <!-- ===== START SCREEN ===== -->
+  <section id="screen-start" class="screen">
+    <header class="bar">
+      <h1 class="bar-title" id="app-title"></h1>
+      <button type="button" class="icon-btn" id="btn-settings" data-i18n-aria="settings" aria-label="Instellingen">
+        <svg class="icon"><use href="#i-gear" /></svg>
+      </button>
+    </header>
+    <main class="content">
+      <p data-i18n="startText"></p>
+
+      <!-- EXAMPLE: shows how a profile saves something. Replace it with the app. -->
+      <div class="card" id="demo">
+        <h2 data-i18n="demoTitle"></h2>
+        <p id="demo-count" aria-live="polite"></p>
+        <button type="button" class="btn btn-primary" id="btn-demo" data-i18n="demoButton"></button>
+      </div>
+    </main>
+  </section>
+
+  <!-- ===== SETTINGS ===== -->
+  <section id="screen-settings" class="screen" hidden>
+    <header class="bar">
+      <button type="button" class="icon-btn" data-go="start" data-i18n-aria="back" aria-label="Terug">
+        <svg class="icon"><use href="#i-back" /></svg>
+      </button>
+      <h1 class="bar-title" data-i18n="settings"></h1>
+    </header>
+    <main class="content">
+      <div class="card">
+        <h2 data-i18n="language"></h2>
+        <div class="langs" role="group" data-i18n-aria="language" aria-label="Taal"></div>
+      </div>
+
+      <div class="card">
+        <h2 data-i18n="profiles"></h2>
+        <div class="profile-list" id="profile-list" role="group" data-i18n-aria="profiles" aria-label="Profielen"></div>
+        <div class="row">
+          <input type="text" id="profile-name" maxlength="20" autocomplete="off" data-i18n-ph="profileNamePh" data-i18n-aria="profileNamePh" />
+          <button type="button" class="btn" id="btn-profile-add" data-i18n="profileAdd"></button>
+        </div>
+        <p class="msg" id="profile-msg" aria-live="polite"></p>
+        <button type="button" class="btn btn-danger" id="btn-profile-delete">
+          <svg class="icon"><use href="#i-trash" /></svg><span data-i18n="profileDelete"></span>
+        </button>
+      </div>
+
+      <div class="card">
+        <h2 data-i18n="data"></h2>
+        <button type="button" class="btn" id="btn-transfer" data-i18n="transfer"></button>
+        <button type="button" class="btn btn-danger" id="btn-wipe-all">
+          <svg class="icon"><use href="#i-trash" /></svg><span data-i18n="wipeBtn"></span>
+        </button>
+      </div>
+
+      <div class="card">
+        <h2 data-i18n="about"></h2>
+        <button type="button" class="btn" id="btn-credits" data-go="credits" data-i18n="credits"></button>
+        <a class="btn" id="link-privacy" href="privacy.html" data-i18n="privacy"></a>
+        <a class="btn" id="link-delete" href="delete.html" data-i18n="deleteInfo"></a>
+        <p class="small" id="version"></p>
+      </div>
+    </main>
+  </section>
+
+  <!-- ===== CREDITS ===== -->
+  <section id="screen-credits" class="screen" hidden>
+    <header class="bar">
+      <button type="button" class="icon-btn" data-go="settings" data-i18n-aria="back" aria-label="Terug">
+        <svg class="icon"><use href="#i-back" /></svg>
+      </button>
+      <h1 class="bar-title" data-i18n="credits"></h1>
+    </header>
+    <main class="content">
+      <div class="card">
+        <h2 id="credits-made-by" data-i18n="creditsMadeBy"></h2>
+        <p id="credits-own"></p>
+        <ul id="credits-list"></ul>
+        <p id="credits-contact"></p>
+      </div>
+    </main>
+  </section>
+
+  <!-- ===== PARENT LOCK: press and hold twice (only used when KINDER_APP is true) ===== -->
+  <div id="modal-parent" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="parent-title">
+    <div class="modal-box">
+      <h2 id="parent-title" data-i18n="parentTitle"></h2>
+      <p data-i18n="parentText"></p>
+      <button type="button" class="btn-hold" id="btn-parent-hold" data-i18n-aria="parentHold" aria-label="Houd ingedrukt" aria-describedby="hold-label">
+        <svg class="hold-ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="hold-track" cx="60" cy="60" r="52" />
+          <circle class="hold-progress" id="hold-progress" cx="60" cy="60" r="52" />
+        </svg>
+        <svg class="icon hold-icon"><use href="#i-lock" /></svg>
+      </button>
+      <p class="hold-label" id="hold-label" aria-live="polite"></p>
+      <button type="button" class="btn" id="btn-parent-cancel" data-i18n="cancel"></button>
+    </div>
+  </div>
+
+  <!-- ===== CONFIRM (delete profile, delete everything, restore) ===== -->
+  <div id="modal-confirm" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal-box">
+      <h2 id="confirm-title"></h2>
+      <p id="confirm-text"></p>
+      <button type="button" class="btn btn-danger" id="btn-confirm-yes"></button>
+      <button type="button" class="btn" id="btn-confirm-no" data-i18n="cancel"></button>
+    </div>
+  </div>
+
+  <!-- ===== EVERYTHING DELETED ===== -->
+  <div id="modal-wiped" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="wiped-title">
+    <div class="modal-box">
+      <h2 id="wiped-title" data-i18n="wipedTitle"></h2>
+      <p data-i18n="wipedText"></p>
+      <button type="button" class="btn btn-primary" id="btn-restart" data-i18n="restart"></button>
+    </div>
+  </div>
+
+  <!-- ===== MOVE PROGRESS: as a code or a file ===== -->
+  <div id="modal-transfer" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="transfer-title">
+    <div class="modal-box">
+      <h2 id="transfer-title" data-i18n="transferTitle"></h2>
+      <p data-i18n="transferHelp"></p>
+      <button type="button" class="btn btn-primary" id="btn-export" data-i18n="exportBtn"></button>
+      <textarea id="transfer-code" readonly rows="3" data-i18n-aria="codeLabel"></textarea>
+      <div class="row">
+        <button type="button" class="btn" id="btn-copy" data-i18n="copyBtn"></button>
+        <button type="button" class="btn" id="btn-file" data-i18n="fileBtn"></button>
+      </div>
+      <hr />
+      <p data-i18n="importHelp"></p>
+      <textarea id="transfer-input" rows="3" data-i18n-aria="importLabel"></textarea>
+      <input type="file" id="transfer-file" accept=".txt,text/plain" data-i18n-aria="fileLabel" />
+      <button type="button" class="btn" id="btn-import" data-i18n="importBtn"></button>
+      <p class="msg" id="transfer-msg" aria-live="polite"></p>
+      <button type="button" class="btn" id="btn-transfer-ok" data-i18n="ok"></button>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="storage.js"></script>
+  <script src="i18n/nl.js"></script>
+  <script src="i18n/en.js"></script>
+  <script src="common.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+node_modules/
+test-results/
+playwright-report/
+tests/screenshots/
+.test-build/
+_site/
+# Android signing keys and TWA build output: never in Git (see docs/twa.md)
+*.keystore
+*.jks
+twa/build/
