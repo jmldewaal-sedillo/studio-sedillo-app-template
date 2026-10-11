@@ -12,9 +12,9 @@ import { fileURLToPath } from 'node:url';
 
 const SOURCE = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const OPEN = '{' + '{', CLOSE = '}' + '}';            // zo staat er in dit bestand zelf geen placeholder
-const SKIP_DIRS = new Set(['.git', 'node_modules', 'test-results', 'playwright-report', '.test-build', '_site']);
+const SKIP_DIRS = new Set(['.git', 'node_modules', 'test-results', 'playwright-report', '.test-build', '_site', 'dist', 'android']);
 const TEXT_EXT = new Set(['.html', '.css', '.js', '.mjs', '.json', '.webmanifest', '.md', '.txt', '.yml', '.yaml', '.sh', '.svg', '.xml']);
-const TEXT_NAMES = new Set(['CNAME', '.gitignore']);
+const TEXT_NAMES = new Set(['.gitignore']);
 const ONLY_IN_TEMPLATE = ['.template', 'TEMPLATE.md', 'tools/vul-in.mjs'];
 // Lastige tekens in de testnaam, zodat de tests ook het veilig invullen bewijzen.
 const TEST_VALUES = { slug: 'demoapp', repo: 'demo-app', naam: 'Demo & Co\'s "App"', kort: 'Demo', kleur: '#2B6CB0' };

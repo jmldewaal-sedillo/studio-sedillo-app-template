@@ -1,0 +1,9 @@
+{
+  "appId": "com.studiosedillo.{{SLUG}}",
+  "appName": "{{APP_NAAM}}",
+  "webDir": "dist/android",
+  "backgroundColor": "{{THEMA_KLEUR}}",
+  "android": {
+    "allowMixedContent": false
+  }
+}

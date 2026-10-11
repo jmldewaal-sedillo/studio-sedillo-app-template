@@ -87,7 +87,8 @@ test('storage.js weigert sleutels die buiten de prefix zouden vallen en laat and
 test('alleen storage.js (en sw.js voor de cache) raakt de opslag van de browser aan', async () => {
   const offenders = [];
   const files = fs.readdirSync(ROOT).filter(f => /\.(js|html)$/.test(f) && f !== 'playwright.config.js')
-    .concat(fs.readdirSync(path.join(ROOT, 'i18n')).map(f => 'i18n/' + f));
+    .concat(fs.readdirSync(path.join(ROOT, 'i18n')).map(f => 'i18n/' + f))
+    .concat(fs.readdirSync(path.join(ROOT, 'platform')).filter(f => f.endsWith('.js')).map(f => 'platform/' + f));
   expect(files).toContain('storage.js');
   for (const file of files) {
     const text = fs.readFileSync(path.join(ROOT, file), 'utf8').replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');

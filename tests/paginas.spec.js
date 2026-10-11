@@ -113,32 +113,14 @@ test('de teksten op de pagina kloppen met de knoppen in de app', async ({ page }
   }
 });
 
-test('assetlinks.json, CNAME en .nojekyll', async ({ request }) => {
-  const response = await request.get('./.well-known/assetlinks.json');
-  expect(response.status()).toBe(200);
-  expect(response.headers()['content-type']).toContain('application/json');
-  const links = await response.json();
-  expect(links[0].relation).toEqual(['delegate_permission/common.handle_all_urls']);
-  expect(links[0].target.namespace).toBe('android_app');
-  expect(links[0].target.package_name).toBe(`com.studiosedillo.${slug()}`);
-  expect(Array.isArray(links[0].target.sha256_cert_fingerprints)).toBe(true);
-
-  expect(fs.readFileSync(path.join(ROOT, 'CNAME'), 'utf8').trim()).toBe(`${slug()}.studiosedillo.com`);
-  expect(fs.existsSync(path.join(ROOT, '.nojekyll')), '.nojekyll').toBe(true);
-  const twa = JSON.parse(fs.readFileSync(path.join(ROOT, 'twa', 'twa-manifest.json'), 'utf8'));
-  expect(twa.packageId).toBe(`com.studiosedillo.${slug()}`);
-  expect(twa.host).toBe(`${slug()}.studiosedillo.com`);
-  expect(twa.name).toBe(appConfig().APP_NAAM);
-});
-
 test('ROADMAP, docs en store-teksten zijn aanwezig en binnen de limieten van Google Play', async () => {
   const roadmap = fs.readFileSync(path.join(ROOT, 'ROADMAP.md'), 'utf8');
   for (const head of ['## Status', '## Nu bezig', '## Volgende', '## Later / ideeën', '## Voor publicatie in Google Play', '## Logboek']) {
     expect(roadmap, head).toContain(head);
   }
-  expect(roadmap).toContain(`https://${slug()}.studiosedillo.com`);
-  expect(roadmap).toContain(`https://test-${slug()}.studiosedillo.com`);
-  for (const doc of ['privacy-audit.md', 'credits.md', 'twa.md', 'publiceren.md']) {
+  expect(roadmap, 'het testadres op github.io').toMatch(/https:\/\/jmldewaal-sedillo\.github\.io\/[A-Za-z0-9._-]+-test\//);
+  expect(roadmap, 'de URL voor de Play Store').toContain(`https://studiosedillo.com/${slug()}/privacy`);
+  for (const doc of ['lanceren.md', 'privacy-audit.md', 'credits.md', 'android.md', 'portals.md', 'publiceren.md']) {
     expect(fs.existsSync(path.join(ROOT, 'docs', doc)), doc).toBe(true);
   }
   const LIMITS = { 'titel.txt': 30, 'korte-beschrijving.txt': 80, 'volledige-beschrijving.txt': 4000 };

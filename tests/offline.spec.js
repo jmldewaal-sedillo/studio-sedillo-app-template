@@ -3,26 +3,16 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { execFileSync } = require('child_process');
 const { test, expect } = require('@playwright/test');
-const { ROOT, BASE, slug, prefix, once, open, storage, expectNoProblems } = require('./helpers');
+const { ROOT, BASE, appConfig, slug, prefix, once, open, storage, copyOfApp, bouw, allFiles, expectNoProblems } = require('./helpers');
 
 test.beforeEach(async ({}, info) => once(info));
 
 const swSource = () => fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
 const assets = () => [...swSource().match(/const ASSETS = \[([\s\S]*?)\];/)[1].matchAll(/'([^']+)'/g)].map(m => m[1]);
-function build(repo, commit = 'abcdef1234567890') {
-  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'site-'));
-  execFileSync('node', [path.join(ROOT, 'tools', 'bouw-site.mjs'), out, repo, commit], { stdio: 'pipe' });
-  return out;
-}
-function allFiles(dir, base = dir, out = []) {
-  for (const name of fs.readdirSync(dir)) {
-    const full = path.join(dir, name);
-    if (fs.statSync(full).isDirectory()) allFiles(full, base, out); else out.push(path.relative(base, full).split(path.sep).join('/'));
-  }
-  return out.sort();
-}
+// De bouwdoelen staan al in dist/ (tests/start-server.mjs bouwt ze voor de tests beginnen).
+const DIST = path.join(ROOT, 'dist');
+const read = (...parts) => fs.readFileSync(path.join(DIST, ...parts), 'utf8');
 
 test.describe('met service worker', () => {
   test.use({ serviceWorkers: 'allow' });
@@ -66,37 +56,70 @@ test.describe('met service worker', () => {
   });
 });
 
-test('de lijst in sw.js is compleet: elk bestand van de site staat erin, en elk bestand bestaat', async () => {
-  const site = build(slug());
+test('de lijst in sw.js is compleet: elk bestand van de webversie staat erin, en elk bestand bestaat', async () => {
   // Wat de app niet nodig heeft om te werken, of wat de service worker niet mag vasthouden.
-  const notCached = ['sw.js', 'CNAME', '.nojekyll', 'version.json', '.well-known/assetlinks.json'];
-  const onSite = allFiles(site).filter(f => !notCached.includes(f));
+  const notCached = ['sw.js', 'CNAME', '.nojekyll', 'version.json', 'robots.txt'];
+  const onSite = allFiles(path.join(DIST, 'web')).filter(f => !notCached.includes(f));
   const listed = assets().filter(a => a !== './').map(a => a.replace(/^\.\//, '')).sort();
   expect(listed).toEqual(onSite);
   expect(assets()).toContain('./');
 });
 
-test('de site krijgt per repo het juiste adres: live en test', async () => {
-  const live = build(slug());
-  expect(fs.readFileSync(path.join(live, 'CNAME'), 'utf8')).toBe(`${slug()}.studiosedillo.com\n`);
-  expect(fs.readFileSync(path.join(live, 'sw.js'), 'utf8')).toBe(swSource());
-  expect(JSON.parse(fs.readFileSync(path.join(live, 'manifest.webmanifest'), 'utf8')).name).not.toContain('TEST');
-
-  const testSite = build(`${slug()}-test`);
-  expect(fs.readFileSync(path.join(testSite, 'CNAME'), 'utf8')).toBe(`test-${slug()}.studiosedillo.com\n`);
-  expect(fs.readFileSync(path.join(testSite, 'sw.js'), 'utf8')).toContain("const BUILD = 'abcdef1';");
-  const manifest = JSON.parse(fs.readFileSync(path.join(testSite, 'manifest.webmanifest'), 'utf8'));
+test('testversie: altijd noindex, geen eigen adres, eigen naam en een cache per commit', async () => {
+  const files = allFiles(path.join(DIST, 'test'));
+  expect(files, 'geen CNAME: de testversie staat op github.io').not.toContain('CNAME');
+  expect(read('test', 'robots.txt')).toBe('User-agent: *\nDisallow: /\n');
+  const pages = files.filter(f => f.endsWith('.html'));
+  expect(pages.length).toBeGreaterThanOrEqual(4);
+  for (const page of pages) expect(read('test', page), `${page} heeft noindex`).toMatch(/<meta name="robots" content="noindex/);
+  expect(read('test', 'sw.js')).toContain("const BUILD = 'abcdef1';");
+  const manifest = JSON.parse(read('test', 'manifest.webmanifest'));
   expect(manifest.name.startsWith('TEST – ')).toBe(true);
   expect(manifest.short_name.length).toBeLessThanOrEqual(12);
+  const leaked = files.filter(f => /^(tests|tools|docs|store|android|node_modules|\.github|\.git)\//.test(f) || /\.md$|^package|^playwright|^\.template$|^capacitor|^bouw\.config/.test(f));
+  expect(leaked, 'alleen de app zelf gaat naar de site').toEqual([]);
+  expect(files).toContain('.nojekyll');
+});
 
-  for (const site of [live, testSite]) {
-    const files = allFiles(site);
-    for (const must of ['.nojekyll', '.well-known/assetlinks.json', 'index.html', 'privacy.html', 'delete.html', 'verwijderen.html', 'version.json']) {
-      expect(files, must).toContain(must);
-    }
-    const leaked = files.filter(f => /^(tests|tools|docs|store|twa|node_modules|\.github|\.git)\//.test(f) || /\.md$|^package|^playwright|^\.template$/.test(f));
-    expect(leaked, 'alleen de app zelf gaat naar de site').toEqual([]);
-  }
+test('de vindbaar-schakelaar: op "nee" krijgt ook de webversie noindex; op "ja" alleen de testversie nog', async () => {
+  expect(appConfig().VINDBAAR, 'VINDBAAR staat op false tot Jenn anders besluit').toBe(false);
+  expect(read('web', 'index.html')).toMatch(/<meta name="robots" content="noindex/);
+  expect(read('web', 'robots.txt')).toContain('Disallow: /');
+  expect(read('web', 'CNAME')).toBe(`${slug()}.studiosedillo.com\n`);
+  expect(read('web', 'sw.js'), 'de webversie krijgt geen build-stempel').toBe(swSource());
+
+  const copy = copyOfApp(dir => {
+    const file = path.join(dir, 'config.js');
+    const text = fs.readFileSync(file, 'utf8');
+    expect(text).toContain('VINDBAAR: false');
+    fs.writeFileSync(file, text.replace('VINDBAAR: false', 'VINDBAAR: true'));
+  });
+  bouw(copy, 'web');
+  bouw(copy, 'test');
+  expect(fs.readFileSync(path.join(copy, 'dist', 'web', 'index.html'), 'utf8')).not.toMatch(/name="robots"/);
+  expect(fs.existsSync(path.join(copy, 'dist', 'web', 'robots.txt'))).toBe(false);
+  expect(fs.readFileSync(path.join(copy, 'dist', 'test', 'index.html'), 'utf8'), 'de testversie blijft noindex').toMatch(/content="noindex/);
+});
+
+test('publiceren: alleen de test-repo, en de webversie pas na "lanceren web"', async () => {
+  const repo = 'mijn-app';
+  expect(bouw(ROOT, 'moet-publiceren', `${repo}-test`).trim()).toBe('true');
+  expect(bouw(ROOT, 'moet-publiceren', repo).trim(), 'web.live staat uit').toBe('false');
+  expect(bouw(ROOT, 'pages', repo, '--uit', path.join(os.tmpdir(), 'niets-' + Date.now()))).toContain('Niets te publiceren');
+
+  const copy = copyOfApp(dir => {
+    const file = path.join(dir, 'bouw.config.json');
+    const config = JSON.parse(fs.readFileSync(file, 'utf8'));
+    expect(config.web.live).toBe(false);
+    config.web.live = true;
+    fs.writeFileSync(file, JSON.stringify(config));
+  });
+  expect(bouw(copy, 'moet-publiceren', repo).trim()).toBe('true');
+  bouw(copy, 'pages', repo, 'abcdef1234567890');
+  expect(fs.readFileSync(path.join(copy, '_site', 'CNAME'), 'utf8')).toBe(`${slug()}.studiosedillo.com\n`);
+  bouw(copy, 'pages', `${repo}-test`, 'abcdef1234567890');
+  expect(fs.existsSync(path.join(copy, '_site', 'CNAME')), 'de test-repo krijgt geen eigen adres').toBe(false);
+  expect(fs.readFileSync(path.join(copy, '_site', 'sw.js'), 'utf8')).toContain("const BUILD = 'abcdef1';");
 });
 
 test('de strook TEST staat er alleen op een adres dat met test- begint', async ({ page }) => {

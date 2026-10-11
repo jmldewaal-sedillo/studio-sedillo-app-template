@@ -8,26 +8,27 @@ indienen de gelinkte pagina's nog een keer na en zet de datum erbij.*
 Vaste gegevens:
 
 - Uitgever: **Studio Sedillo**, contact **studio.sedillo@gmail.com**.
-- Adres van de app: **https://{{SLUG}}.studiosedillo.com/**
+- De app is een Android-app (Capacitor, alle bestanden in de app); er is geen app-website.
 - Package name: **com.studiosedillo.{{SLUG}}**
-- Privacybeleid: `https://{{SLUG}}.studiosedillo.com/privacy`
-- Gegevens verwijderen: `https://{{SLUG}}.studiosedillo.com/delete`
+- Privacybeleid: `https://studiosedillo.com/{{SLUG}}/privacy`
+- Gegevens verwijderen: `https://studiosedillo.com/{{SLUG}}/delete`
 
 Nog te besluiten (vul in):
 
 - Doelgroep en leeftijd: …
 - `KINDER_APP` in `config.js`: …
-- Advertenties: nee, tenzij Jenn anders besluit (dan eerst privacyverklaring en Data safety).
+- Advertenties en aankopen: nee. Bij een kinder-app nooit; bij andere apps pas na akkoord van
+  Jenn en nadat het zakelijke postadres geregeld is (`Apps/CLAUDE.md`, sectie 11, punt 5).
 
 ---
 
 ## Wat Jenn zelf moet doen (in deze volgorde)
 
-- [ ] De testversie nalopen op https://test-{{SLUG}}.studiosedillo.com en akkoord geven.
+- [ ] De testversie nalopen op https://jmldewaal-sedillo.github.io/{{REPO}}-test/ en akkoord geven.
 - [ ] App aanmaken in Play Console: naam "{{APP_NAAM}}", gratis.
-- [ ] TWA bouwen met Bubblewrap en de **upload key** maken en veilig opbergen (`docs/twa.md`).
-- [ ] De `.aab` uploaden naar **Interne test**; daarna de SHA-256 van de **app signing key**
-      kopiëren en in `.well-known/assetlinks.json` (laten) zetten.
+- [ ] De **upload key** maken en veilig opbergen, en de app bouwen (`docs/android.md`).
+- [ ] De `.aab` uploaden naar **Interne test** en op de eigen telefoon proberen.
+- [ ] Akkoord geven om de privacy- en verwijderpagina op studiosedillo.com te zetten.
 - [ ] App-content invullen met de antwoorden uit dit document: privacybeleid-URL,
       advertenties, app-toegang, doelgroep, Data safety, contentclassificatie (IARC).
 - [ ] Store-pagina vullen met het materiaal uit `store/`.
@@ -43,8 +44,9 @@ Nog te besluiten (vul in):
 
 Bron: [User Data-beleid][userdata]. Ook apps die geen gegevens verzamelen moeten er een hebben.
 
-- [ ] Live op `https://{{SLUG}}.studiosedillo.com/privacy`: openbaar, geen pdf.
-- [ ] In alle talen van de app.
+- [ ] Live op `https://studiosedillo.com/{{SLUG}}/privacy`: openbaar, geen pdf. (De app toont
+      dezelfde tekst zelf, ook zonder internet.)
+- [ ] In minimaal EN en NL, plus de grote talen van de app.
 - [ ] De lijst "Wat er wordt bewaard, en waar" in `i18n/*.js` klopt met `docs/privacy-audit.md`.
 - [ ] Bij een kinder-app: `KINDER_APP: true`, zodat de paragraaf "Kinderen en ouders" erin staat.
 - [ ] Datum van laatste wijziging klopt (`PRIVACY_DATUM` in `config.js`).
@@ -52,7 +54,7 @@ Bron: [User Data-beleid][userdata]. Ook apps die geen gegevens verzamelen moeten
       ([GitHub][gh-privacy], [Google][google-frameworks], [Europese Commissie][dpf-ec]).
       Zo niet: de paragraaf "Gegevens buiten de EU" aanpassen, in alle apps en op de hoofdsite.
 - [ ] Link in Play Console én in de app zelf (Instellingen → Privacyverklaring).
-- [ ] Vermeld op studiosedillo.com/privacy bij de lijst van spellen.
+- [ ] Vermeld op studiosedillo.com/privacy bij de lijst van spellen (na de lancering).
 
 ### 2. Gegevens kunnen verwijderen
 
@@ -61,7 +63,7 @@ Deze app heeft geen accounts; we voldoen er toch aan.
 
 - [ ] In de app: "Profiel verwijderen" en "Alle gegevens van deze app verwijderen" werken
       (`tests/wissen.spec.js` is groen).
-- [ ] Webpagina live op `https://{{SLUG}}.studiosedillo.com/delete`; de stappen op de pagina
+- [ ] Webpagina live op `https://studiosedillo.com/{{SLUG}}/delete`; de stappen op de pagina
       kloppen met waar de knoppen in de app echt zitten.
 - [ ] De link ingevuld in Play Console (Data safety → gegevens verwijderen).
 
@@ -75,8 +77,8 @@ Bron: [Data safety][datasafety]. Verplicht voor elke track behalve interne test.
 |---|---|
 | Verzamelt of deelt je app een van de vereiste soorten gebruikersgegevens? | **Nee**, zolang de audit zegt dat niets het toestel verlaat |
 | Kunnen gebruikers in je app een account aanmaken? | **Nee**: een profiel op het toestel is geen account |
-| URL voor het verwijderen van gegevens | `https://{{SLUG}}.studiosedillo.com/delete` |
-| Privacybeleid-URL | `https://{{SLUG}}.studiosedillo.com/privacy` |
+| URL voor het verwijderen van gegevens | `https://studiosedillo.com/{{SLUG}}/delete` |
+| Privacybeleid-URL | `https://studiosedillo.com/{{SLUG}}/privacy` |
 
 - [ ] Ingevuld. Opnieuw invullen zodra er ooit iets het toestel verlaat.
 
@@ -93,14 +95,14 @@ Bronnen: [doelgroep en content][target], [Families-beleid][families].
 
 - [ ] Doelleeftijd gekozen: …
 - [ ] Zit er een kindergroep in de doelgroep, dan geldt het Families-beleid volledig: geen
-      inloggen via Google of Facebook, geen advertentie-ID, advertenties alleen na expliciet
-      besluit en dan alleen via een voor Families goedgekeurde SDK.
+      inloggen via Google of Facebook, geen advertentie-ID, **geen advertenties en geen
+      aankopen** (`Apps/CLAUDE.md`, sectie 11, punt 5).
 - [ ] App-toegang: "Alle functies zijn zonder speciale toegang beschikbaar". Bij een
       kinder-app in de notities zetten hoe het ouderslot werkt (knop twee keer 1,5 seconde
       ingedrukt houden).
 - [ ] Aandachtspunt bij kinder-apps: het Families-beleid wil geen app die alleen een webview
-      van een website is. Een TWA is technisch geen WebView, maar zorg dat `assetlinks.json`
-      klopt (geen adresbalk), de app offline start en er geen link naar een website in zit.
+      van een website is. Deze app heeft al zijn bestanden bij zich en start zonder internet;
+      controleer dat dat zo blijft.
 
 ### 6. Store-pagina
 
@@ -113,13 +115,13 @@ Bronnen: [previewmateriaal][assets], [metadatabeleid][metadata]. Formaten: `stor
 - [ ] Ontwikkelaarsnaam Studio Sedillo, e-mail studio.sedillo@gmail.com, website https://studiosedillo.com.
 - [ ] Categorie en tags gekozen: …
 
-### 7. Android-app (TWA)
+### 7. Android-app (Capacitor)
 
-Zie `docs/twa.md`. Bron: [target-API-eisen][targetapi].
+Zie `docs/android.md`. Bron: [target-API-eisen][targetapi].
 
-- [ ] `assetlinks.json` live met de vingerafdruk van de app signing key.
-- [ ] TWA gebouwd, `targetSdkVersion` voldoet aan de eis van dat moment.
-- [ ] Getest op een echte telefoon: geen adresbalk, start in vliegtuigmodus.
+- [ ] App gebouwd met Capacitor; `targetSdkVersion` voldoet aan de eis van dat moment.
+- [ ] Geen permissie `AD_ID`, geen locatie- of meldingspermissie.
+- [ ] Getest op een echte telefoon via de interne test: start in vliegtuigmodus, de terugknop werkt.
 
 ### 8. Gesloten test voor nieuwe persoonlijke accounts
 

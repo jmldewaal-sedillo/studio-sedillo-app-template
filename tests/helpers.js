@@ -65,7 +65,7 @@ async function hold(page) {
 }
 
 /** Alle tekstbestanden onder een map (zonder de mappen die niet bij de bron horen). */
-function textFiles(dir, skip = ['.git', 'node_modules', 'test-results', 'playwright-report', '.test-build', '_site', 'screenshots']) {
+function textFiles(dir, skip = ['.git', 'node_modules', 'test-results', 'playwright-report', '.test-build', '_site', 'dist', 'android', 'screenshots']) {
   const TEXT = /\.(html|css|js|mjs|json|webmanifest|md|txt|yml|yaml|sh|svg|xml)$/;
   const out = [];
   (function walk(d) {
@@ -79,8 +79,36 @@ function textFiles(dir, skip = ['.git', 'node_modules', 'test-results', 'playwri
   return out;
 }
 
+/** Een kopie van de app in een tijdelijke map, om een instelling te veranderen en dan te bouwen. */
+function copyOfApp(change) {
+  const os = require('os');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'app-'));
+  const skip = ['.git', 'node_modules', 'test-results', 'playwright-report', '.test-build', '_site', 'dist', 'android', 'tests'];
+  (function copy(from, to) {
+    for (const name of fs.readdirSync(from)) {
+      if (from === ROOT && skip.includes(name)) continue;
+      const src = path.join(from, name), dst = path.join(to, name);
+      if (fs.statSync(src).isDirectory()) { fs.mkdirSync(dst); copy(src, dst); } else fs.copyFileSync(src, dst);
+    }
+  })(ROOT, dir);
+  if (change) change(dir);
+  return dir;
+}
+/** Draait tools/bouw.mjs in een map en geeft terug wat het printte. */
+function bouw(dir, ...args) {
+  const { execFileSync } = require('child_process');
+  return execFileSync('node', [path.join(dir, 'tools', 'bouw.mjs'), ...args], { stdio: 'pipe' }).toString();
+}
+function allFiles(dir, base = dir, out = []) {
+  for (const name of fs.readdirSync(dir)) {
+    const full = path.join(dir, name);
+    if (fs.statSync(full).isDirectory()) allFiles(full, base, out); else out.push(path.relative(base, full).split(path.sep).join('/'));
+  }
+  return out.sort();
+}
+
 function expectNoProblems(problems) {
   expect(problems, `Problemen tijdens laden of gebruiken:\n${problems.join('\n')}`).toEqual([]);
 }
 
-module.exports = { ROOT, BASE, appConfig, slug, prefix, once, open, kinderApp, storage, hold, textFiles, expectNoProblems };
+module.exports = { ROOT, BASE, appConfig, slug, prefix, once, open, kinderApp, storage, hold, textFiles, copyOfApp, bouw, allFiles, expectNoProblems };

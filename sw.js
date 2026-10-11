@@ -1,5 +1,7 @@
 // ============================================================
 // SERVICE WORKER – {{APP_NAAM}}
+// Only in the build target web (and the test version): the Android app and the portal
+// builds have all files on board and no service worker (tools/bouw.mjs leaves this file out).
 // Keeps the files of the app on the device, so it works without internet.
 // Paths are relative, so the same file works on the live and the test address.
 //
@@ -20,6 +22,7 @@ const ASSETS = [
   './index.html',
   './style.css',
   './config.js',
+  './platform/web.js',
   './storage.js',
   './i18n/nl.js',
   './i18n/en.js',

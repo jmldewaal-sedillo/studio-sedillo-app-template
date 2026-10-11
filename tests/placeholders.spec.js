@@ -12,8 +12,8 @@ test('geen enkele {{...}}-placeholder meer in de bestanden', async ({}, info) =>
   once(info);
   const files = textFiles(ROOT);
   expect(files.length, 'er zijn bestanden gecontroleerd').toBeGreaterThan(30);
-  for (const must of ['index.html', 'config.js', 'storage.js', 'sw.js', 'manifest.webmanifest', 'CNAME', 'README.md', 'ROADMAP.md',
-    path.join('.well-known', 'assetlinks.json'), path.join('.github', 'workflows', 'ci.yml'), path.join('docs', 'publiceren.md'), path.join('store', 'README.md')]) {
+  for (const must of ['index.html', 'config.js', 'storage.js', 'sw.js', 'manifest.webmanifest', 'capacitor.config.json', 'bouw.config.json', 'README.md', 'ROADMAP.md', 'CLAUDE.md',
+    path.join('platform', 'android.js'), path.join('.github', 'workflows', 'ci.yml'), path.join('docs', 'lanceren.md'), path.join('docs', 'publiceren.md'), path.join('store', 'README.md')]) {
     expect(files.map(f => path.relative(ROOT, f)), `${must} is gecontroleerd`).toContain(must);
   }
   const found = [];

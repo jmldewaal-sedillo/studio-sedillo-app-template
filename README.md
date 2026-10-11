@@ -1,21 +1,33 @@
 # {{APP_NAAM}}
 
-Een app van Studio Sedillo. Vanilla HTML, CSS en JavaScript; geen build-stap, geen externe
-bestanden, werkt zonder internet (PWA).
+Een app van Studio Sedillo. Vanilla HTML, CSS en JavaScript: één codebase met drie
+bouwdoelen (Android, webportals, en later eventueel web). De vaste opzet staat in
+`Apps/CLAUDE.md`, sectie 11 ("App-structuur Studio Sedillo"); wat alleen voor deze app geldt
+in `CLAUDE.md` hier. De planning en het logboek staan in `ROADMAP.md`, de weg naar de
+lancering in `docs/lanceren.md`.
 
 | | |
 |---|---|
-| Live | https://{{SLUG}}.studiosedillo.com |
-| Test | https://test-{{SLUG}}.studiosedillo.com |
-| Privacyverklaring | https://{{SLUG}}.studiosedillo.com/privacy |
-| Gegevens verwijderen | https://{{SLUG}}.studiosedillo.com/delete |
-| Repo live | https://github.com/jmldewaal-sedillo/{{REPO}} (remote `origin`) |
-| Repo test | https://github.com/jmldewaal-sedillo/{{REPO}}-test (remote `test`) |
+| Testversie | https://jmldewaal-sedillo.github.io/{{REPO}}-test/ (noindex, nergens naar gelinkt) |
+| Privacyverklaring | https://studiosedillo.com/{{SLUG}}/privacy (na de lancering) |
+| Gegevens verwijderen | https://studiosedillo.com/{{SLUG}}/delete (na de lancering) |
+| Repo | https://github.com/jmldewaal-sedillo/{{REPO}} (remote `origin`) |
+| Repo testversie | https://github.com/jmldewaal-sedillo/{{REPO}}-test (remote `test`) |
 | Android package | `com.studiosedillo.{{SLUG}}` |
 | Prefix opslag | `{{SLUG}}.` |
 
-De vaste afspraken voor alle apps staan in `Apps/CLAUDE.md`; wat alleen voor deze app geldt
-in `CLAUDE.md` hier. De planning en het logboek staan in `ROADMAP.md`.
+## De bouwdoelen
+
+| Bouwdoel | Commando | Uitkomst |
+|---|---|---|
+| android | `npm run android:sync` | `dist/android/` in het Android-project (Capacitor); zie `docs/android.md` |
+| webportal | `node tools/bouw.mjs portal <naam>` | `dist/portal-<naam>.zip`; zie `docs/portals.md` |
+| testversie | `git push test HEAD:main` | de workflow publiceert op github.io |
+| hoofdsite | `npm run bouw:hoofdsite` | de pagina's privacy en verwijderen voor studiosedillo.com |
+| web (later) | `web.live` in `bouw.config.json` | PWA op {{SLUG}}.studiosedillo.com, pas na "lanceren web" |
+
+De spelcode is voor elk bouwdoel dezelfde. Wat verschilt (service worker, links naar buiten,
+terugknop, advertenties, SDK) zit in één bestand per bouwdoel in `platform/`.
 
 ## Lokaal bekijken
 
@@ -32,36 +44,39 @@ npm test
 ```
 
 De tests draaien op drie formaten (telefoon staand en liggend, tablet) en zetten
-schermafbeeldingen in `tests/screenshots/`. Ze controleren onder meer: laden zonder fouten,
-taal wisselen, werken zonder internet, dat verwijderen geen enkele `{{SLUG}}.`-sleutel en geen
-cache achterlaat, dat exporteren en importeren dezelfde gegevens teruggeeft, en dat er geen
-placeholder van de template is blijven staan.
+schermafbeeldingen in `tests/screenshots/`. Ze bouwen ook elk bouwdoel en openen het. Ze
+controleren onder meer: laden zonder fouten en zonder verzoeken naar buiten, taal wisselen,
+dat verwijderen geen enkele `{{SLUG}}.`-sleutel achterlaat, dat exporteren en importeren
+dezelfde gegevens teruggeeft, dat de Android- en portal-versie geen service worker hebben,
+dat de portal-versie geen links naar buiten heeft, en dat de testversie noindex is.
 
-## Naar het testadres en live
+## Werkwijze
 
-Elke push draait de tests op GitHub. Een push naar `main` publiceert daarna de app, maar
-alleen als de tests groen zijn. Welk adres het wordt hangt af van de repo:
+testen = push naar test; live = merge naar `main` na akkoord van Jenn.
 
 ```bash
-git push test HEAD:main      # -> https://test-{{SLUG}}.studiosedillo.com
-git push origin main         # -> https://{{SLUG}}.studiosedillo.com   (alleen na akkoord van Jenn)
+git push test HEAD:main      # -> de testversie op github.io
+git push origin main         # alleen na akkoord van Jenn
 ```
 
-Verhoog bij elke wijziging aan de app `CACHE_VERSION` in `sw.js`.
+De hooks tegen privégegevens staan aan na `tools/install-hooks.sh` (één keer per kopie van
+de repo; `Apps/tools/nieuwe-app.sh` heeft dat al gedaan).
 
 ## Bestanden
 
 | Bestand | Wat |
 |---|---|
-| `config.js` | Naam, slug, themakleur, `KINDER_APP` (ouderslot aan of uit), talen, credits |
+| `config.js` | Naam, slug, themakleur, `KINDER_APP`, `VINDBAAR`, `ADVERTENTIES`, talen, credits |
 | `index.html`, `style.css`, `app.js` | Het startscherm en de instellingen |
 | `storage.js` | Alle opslag, altijd met de prefix `{{SLUG}}.`; wissen, exporteren, importeren |
 | `i18n/` | De teksten per taal, ook die van de privacyverklaring |
 | `common.js`, `pages.js` | Taalkeuze en de pagina's privacy en verwijderen |
-| `sw.js`, `manifest.webmanifest`, `icons/` | De PWA: cache voor gebruik zonder internet, naam en iconen |
+| `platform/` | De dunne laag per bouwdoel: `android.js`, `portal.js`, `web.js`, `hoofdsite.js` |
+| `capacitor.config.json` | De Android-app (Capacitor) |
+| `bouw.config.json` | Portals, en of de webversie live staat |
+| `sw.js`, `manifest.webmanifest` | Alleen bouwdoel web en de testversie: cache voor gebruik zonder internet |
 | `privacy.html`, `delete.html`, `verwijderen.html` | Privacyverklaring, verwijderpagina, doorverwijzing |
-| `.well-known/assetlinks.json` | Koppeling met de Android-app (zie `docs/twa.md`) |
-| `docs/` | Privacy-audit, credits, TWA, checklist voor Google Play |
+| `docs/` | Lanceren, Android, portals, checklist voor Google Play, privacy-audit, credits |
 | `store/` | Teksten en beeldmateriaal voor Google Play |
-| `tools/` | Lokale server, iconen maken, de site klaarzetten voor GitHub Pages |
+| `tools/` | `bouw.mjs` (de bouwdoelen), lokale server, iconen, hooks tegen privégegevens |
 | `tests/` | Playwright-tests |

@@ -1,15 +1,20 @@
 # Template voor Studio Sedillo-apps
 
-Dit is de template waar elke nieuwe app van Studio Sedillo mee begint. Maak een app niet met
-de hand uit deze repo, maar met het script (in de map `Apps/`):
+Dit is de template waar elke nieuwe app van Studio Sedillo mee begint. De opzet volgt
+`Apps/CLAUDE.md`, sectie 11 ("App-structuur Studio Sedillo"): één codebase, drie bouwdoelen
+(Android met Capacitor, webportals, en later eventueel web), een testversie op github.io, de
+blocklist tegen privégegevens en de vindbaar-schakelaar op "nee".
+
+Maak een app niet met de hand uit deze repo, maar met het script (in de map `Apps/`):
 
 ```bash
-tools/nieuwe-app.sh <slug> <repo-naam> "<App-naam>"
 tools/nieuwe-app.sh --dry-run <slug> <repo-naam> "<App-naam>"     # laat alles zien, maakt niets aan
+tools/nieuwe-app.sh <slug> <repo-naam> "<App-naam>"
 ```
 
-Het script maakt de repo's, vult de placeholders in en zet GitHub Pages aan. Dit bestand en
-`.template` verdwijnen daarbij uit de nieuwe app.
+Het script maakt de repo's, vult de placeholders in, zet de hooks en het geheim voor de
+blocklist en zet GitHub Pages aan voor de testversie. Dit bestand en `.template` verdwijnen
+daarbij uit de nieuwe app.
 
 ## Placeholders
 
@@ -46,6 +51,10 @@ test in `tests/placeholders.spec.js` faalt als daar nog een placeholder in staat
   Actions gebruikt `tests/no-private-data.py --ci` het geheim `PRIVATE_BLOCKLIST`.
   `Apps/tools/nieuwe-app.sh` regelt beide voor een nieuwe app.
 - Nieuw bestand voor de app? Zet het in `ASSETS` in `sw.js` (een test controleert dat).
+- Iets dat per bouwdoel verschilt? In `platform/`, in elk bestand met dezelfde onderdelen (een
+  test controleert dat). De spelcode kijkt nooit zelf op welk bouwdoel ze draait.
+- Geen SDK van een portal en geen advertentie-plug-in in de template: die komen per app, na
+  akkoord van Jenn.
 - Nieuwe sleutel in de opslag? Zet hem in `docs/privacy-audit.md` (een test controleert dat).
 - Nieuwe tekst? In elk bestand in `i18n/` (een test controleert dat).
 - Draai de tests en push naar `main`. Bestaande apps krijgen de wijziging niet vanzelf.

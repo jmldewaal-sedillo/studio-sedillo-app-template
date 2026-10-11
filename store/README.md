@@ -41,8 +41,8 @@ Controleer de maten vlak voor het uploaden in Play Console zelf; Google past ze 
 | Ontwikkelaar | Studio Sedillo |
 | E-mail | studio.sedillo@gmail.com |
 | Website | https://studiosedillo.com |
-| Privacybeleid | https://{{SLUG}}.studiosedillo.com/privacy |
-| Gegevens verwijderen | https://{{SLUG}}.studiosedillo.com/delete |
+| Privacybeleid | https://studiosedillo.com/{{SLUG}}/privacy |
+| Gegevens verwijderen | https://studiosedillo.com/{{SLUG}}/delete |
 | Package-naam | `com.studiosedillo.{{SLUG}}` |
 
 ## Screenshots maken

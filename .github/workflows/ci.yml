@@ -1,10 +1,10 @@
 name: Testen en publiceren
 
 # Elke push: de tests draaien.
-# Push naar main: zijn de tests groen, dan gaat de app naar GitHub Pages.
-#   repo <naam>        -> https://<slug>.studiosedillo.com        (live)
-#   repo <naam>-test   -> https://test-<slug>.studiosedillo.com   (test)
-# Het adres (CNAME) verschilt dus per repo; tools/bouw-site.mjs regelt dat.
+# Push naar main: zijn de tests groen, dan wordt er gepubliceerd op GitHub Pages, maar alleen:
+#   repo <naam>-test   -> de testversie op https://jmldewaal-sedillo.github.io/<naam>-test/ (noindex)
+#   repo <naam>        -> de webversie, pas als web.live in bouw.config.json aan staat ("lanceren web")
+# tools/bouw.mjs beslist dat. De Android-app en de portal-zips komen niet uit deze workflow.
 
 on:
   push:
@@ -24,13 +24,19 @@ jobs:
     timeout-minutes: 20
     outputs:
       template: ${{ steps.soort.outputs.template }}
+      publiceren: ${{ steps.soort.outputs.publiceren }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Template of app?
         id: soort
         run: |
-          if [ -f .template ]; then echo "template=true" >> "$GITHUB_OUTPUT"; else echo "template=false" >> "$GITHUB_OUTPUT"; fi
+          if [ -f .template ]; then
+            echo "template=true" >> "$GITHUB_OUTPUT"; echo "publiceren=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "template=false" >> "$GITHUB_OUTPUT"
+            echo "publiceren=$(node tools/bouw.mjs moet-publiceren "${{ github.event.repository.name }}")" >> "$GITHUB_OUTPUT"
+          fi
 
       # Vangnet: geen privégegevens (huisadres) online. De lijst komt uit het geheim
       # PRIVATE_BLOCKLIST; zonder geheim volgt een waarschuwing en gaat de run door.
@@ -67,8 +73,9 @@ jobs:
   deploy:
     name: Publiceren op GitHub Pages
     needs: test
-    # Alleen main, alleen als de tests groen zijn, en nooit vanuit de template zelf.
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && needs.test.outputs.template == 'false'
+    # Alleen main, alleen als de tests groen zijn, nooit vanuit de template, en alleen als
+    # tools/bouw.mjs zegt dat deze repo iets publiceert (de test-repo, of web.live).
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && needs.test.outputs.template == 'false' && needs.test.outputs.publiceren == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -84,11 +91,11 @@ jobs:
         with:
           node-version: 22
 
-      - name: Site klaarzetten (met het adres van deze repo)
-        run: node tools/bouw-site.mjs _site "${{ github.event.repository.name }}" "$GITHUB_SHA"
+      - name: Site klaarzetten (testversie of webversie, naar gelang de repo)
+        run: node tools/bouw.mjs pages "${{ github.event.repository.name }}" "$GITHUB_SHA"
 
-      # Zelf inpakken in plaats van actions/upload-pages-artifact: die laat bestanden en mappen
-      # die met een punt beginnen weg, en dan ontbreekt .well-known/assetlinks.json.
+      # Zelf inpakken in plaats van actions/upload-pages-artifact: die laat bestanden
+      # die met een punt beginnen weg (.nojekyll).
       - name: Inpakken
         run: tar --dereference --hard-dereference --directory _site -cf "$RUNNER_TEMP/artifact.tar" .
 
@@ -104,4 +111,4 @@ jobs:
         uses: actions/deploy-pages@v4
 
       - name: Adres in de samenvatting
-        run: echo "Gepubliceerd op https://$(cat _site/CNAME) (${GITHUB_SHA::7})" >> "$GITHUB_STEP_SUMMARY"
+        run: echo "Gepubliceerd op ${{ steps.deployment.outputs.page_url }} (${GITHUB_SHA::7})" >> "$GITHUB_STEP_SUMMARY"

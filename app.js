@@ -8,6 +8,7 @@
   const C = window.APP_CONFIG;
   const Store = window.AppStorage;
   const App = window.App;
+  const Platform = window.Platform;
   const t = App.t;
   const $ = id => document.getElementById(id);
   const on = (id, ev, fn) => $(id).addEventListener(ev, fn);
@@ -235,15 +236,26 @@
     ['contextmenu', 'selectstart', 'dragstart'].forEach(ev => hold.addEventListener(ev, e => e.preventDefault()));
     on('btn-parent-cancel', 'click', () => { parentAction = null; resetHold(); hideModals(); });
 
-    document.addEventListener('keydown', e => {
-      if (e.key !== 'Escape') return;
-      const open = document.querySelector('.modal:not([hidden])');
-      if (open && open.id !== 'modal-wiped') { parentAction = null; confirmAction = null; resetHold(); hideModals(); }
-    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.querySelector('.modal:not([hidden])')) back(); });
   }
 
-  // ---------- service worker (offline use) ----------
+  // ---------- one step back (Escape, and the back button of Android via Platform) ----------
+  // Returns false when there is nothing to go back to: the app is on the start screen.
+  const PARENT_SCREEN = { settings: 'start', credits: 'settings' };
+  function back() {
+    const open = document.querySelector('.modal:not([hidden])');
+    if (open) {
+      if (open.id === 'modal-wiped') return true;        // only "start again" leaves this one
+      parentAction = null; confirmAction = null; resetHold(); hideModals();
+      return true;
+    }
+    if (PARENT_SCREEN[currentScreen]) { showScreen(PARENT_SCREEN[currentScreen]); return true; }
+    return false;
+  }
+
+  // ---------- service worker (offline use; only the build target web has one) ----------
   function registerSW() {
+    if (!Platform.SERVICE_WORKER) return;
     if (!('serviceWorker' in navigator) || !location.protocol.startsWith('http')) return;
     const hadController = !!navigator.serviceWorker.controller;
     // A new version took over: load it, but only from the start screen, never
@@ -265,4 +277,6 @@
   bind();
   render();
   registerSW();
+  Platform.start({ back });
+  Platform.spel.geladen();
 })();

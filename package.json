@@ -5,9 +5,23 @@
     "serve": "node tools/serve.mjs 5000",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
-    "iconen": "node tools/maak-iconen.mjs"
+    "iconen": "node tools/maak-iconen.mjs",
+    "bouw:android": "node tools/bouw.mjs android",
+    "bouw:portal": "node tools/bouw.mjs portal",
+    "bouw:test": "node tools/bouw.mjs test",
+    "bouw:web": "node tools/bouw.mjs web",
+    "bouw:hoofdsite": "node tools/bouw.mjs hoofdsite",
+    "android:init": "node tools/bouw.mjs android && cap add android",
+    "android:sync": "node tools/bouw.mjs android && cap sync android",
+    "android:open": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.5.3",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/core": "8.5.3"
   },
   "devDependencies": {
+    "@capacitor/cli": "8.5.3",
     "@playwright/test": "1.63.0"
   }
 }

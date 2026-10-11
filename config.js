@@ -16,6 +16,15 @@ window.APP_CONFIG = {
   // false = no parent lock.
   KINDER_APP: false,
 
+  // The findable switch. false = every built page gets "noindex" and robots.txt refuses
+  // everything, so search engines stay away. Only Jenn decides to set this to true.
+  // (The test version is always noindex, whatever this says.)
+  VINDBAAR: false,
+
+  // Advertising (AdMob, Android only). Stays false until Jenn approves; never true in a
+  // children's app. See Apps/CLAUDE.md, section 11, point 5.
+  ADVERTENTIES: false,
+
   // Languages of the app, in the order of the buttons. Each one needs a file
   // i18n/<code>.js (and a <script> tag in every HTML page, and a line in sw.js).
   TALEN: ['nl', 'en'],

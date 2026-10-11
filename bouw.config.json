@@ -1,0 +1,7 @@
+{
+  "web": {
+    "live": false,
+    "domein": "{{SLUG}}.studiosedillo.com"
+  },
+  "portals": []
+}
