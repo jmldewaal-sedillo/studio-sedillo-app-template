@@ -32,6 +32,13 @@ jobs:
         run: |
           if [ -f .template ]; then echo "template=true" >> "$GITHUB_OUTPUT"; else echo "template=false" >> "$GITHUB_OUTPUT"; fi
 
+      # Vangnet: geen privégegevens (huisadres) online. De lijst komt uit het geheim
+      # PRIVATE_BLOCKLIST; zonder geheim volgt een waarschuwing en gaat de run door.
+      - name: Controle op privégegevens
+        env:
+          PRIVATE_BLOCKLIST: ${{ secrets.PRIVATE_BLOCKLIST }}
+        run: python3 tests/no-private-data.py --ci
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22

@@ -41,6 +41,10 @@ test in `tests/placeholders.spec.js` faalt als daar nog een placeholder in staat
 ## Iets aan de template veranderen
 
 - Houd het algemeen: niets wat bij één app hoort.
+- Nooit een adres of ander privégegeven in de template of in een app. `tools/install-hooks.sh`
+  zet de controle aan (lijst buiten de repo: `~/.studio-sedillo/blocklist.txt`); in GitHub
+  Actions gebruikt `tests/no-private-data.py --ci` het geheim `PRIVATE_BLOCKLIST`.
+  `Apps/tools/nieuwe-app.sh` regelt beide voor een nieuwe app.
 - Nieuw bestand voor de app? Zet het in `ASSETS` in `sw.js` (een test controleert dat).
 - Nieuwe sleutel in de opslag? Zet hem in `docs/privacy-audit.md` (een test controleert dat).
 - Nieuwe tekst? In elk bestand in `i18n/` (een test controleert dat).
