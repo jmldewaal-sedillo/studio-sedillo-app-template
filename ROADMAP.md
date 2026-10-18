@@ -2,6 +2,7 @@
 
 ## Status
 Android: nog niet in de Play Store — versie 0.1 (nog alleen de template)
+iOS: nog niet in de App Store
 Test: https://jmldewaal-sedillo.github.io/{{REPO}}-test/
 Webportals: nog geen
 
@@ -10,7 +11,7 @@ Volg `docs/lanceren.md`; dat is de checklist van idee tot lancering.
 - [ ] `CLAUDE.md` invullen: doel, doelgroep, toon, techniek
 - [ ] `KINDER_APP` in `config.js` kiezen (true = ouderslot en paragraaf "Kinderen en ouders"; dan geen advertenties of aankopen)
 - [ ] Het voorbeeld op het startscherm (de teller) vervangen door de app zelf
-- [ ] Eén keer `npm run android:init` draaien en de map `android/` committen (`docs/android.md`)
+- [ ] Eén keer `npm run app:init` draaien en de mappen `android/` en `ios/` committen (`docs/app.md`)
 
 ## Volgende
 - [ ] Echte iconen in `icons/` (192, 512, maskable) in plaats van de tijdelijke ring

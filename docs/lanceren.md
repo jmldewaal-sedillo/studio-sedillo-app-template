@@ -5,7 +5,8 @@ gebeurt. De vaste opzet staat in `Apps/CLAUDE.md`, sectie 11 ("App-structuur Stu
 Sedillo"); deze lijst past hem toe op deze app. Vink af, en zet de datum in het logboek van
 `ROADMAP.md`.
 
-Volgorde van de bouwdoelen: **eerst Android**, dan **webportals**, en de **webversie** pas
+Volgorde van de bouwdoelen: **eerst de app** (Android in de Play Store; iOS zodra het Apple
+Developer-account er is), dan **webportals**, en de **webversie** pas
 als Jenn "lanceren web" zegt.
 
 ## 1. Besluiten (Jenn)
@@ -35,9 +36,10 @@ als Jenn "lanceren web" zegt.
       (noindex, nergens naar gelinkt). Jenn loopt hem na op haar telefoon.
 - [ ] Na akkoord van Jenn: mergen naar `main`.
 
-## 4. Android (`docs/android.md`)
+## 4. De app: Android en iOS (`docs/app.md`)
 
-- [ ] `npm run android:init` gedaan en `android/` gecommit.
+- [ ] `npm run app:init` gedaan en `android/` en `ios/` gecommit; de workflow `app.yml` is groen
+      (test-APK en iOS-simulatorbuild).
 - [ ] Jenn heeft de upload key gemaakt en op twee plekken bewaard (nooit in Git).
 - [ ] De app start in vliegtuigmodus en de terugknop werkt.
 - [ ] Geen permissies die de app niet nodig heeft (geen `AD_ID`, locatie of meldingen).

@@ -120,7 +120,7 @@ test('ROADMAP, docs en store-teksten zijn aanwezig en binnen de limieten van Goo
   }
   expect(roadmap, 'het testadres op github.io').toMatch(/https:\/\/jmldewaal-sedillo\.github\.io\/[A-Za-z0-9._-]+-test\//);
   expect(roadmap, 'de URL voor de Play Store').toContain(`https://studiosedillo.com/${sitePath()}/privacy`);
-  for (const doc of ['lanceren.md', 'privacy-audit.md', 'credits.md', 'android.md', 'webportals.md', 'publiceren.md']) {
+  for (const doc of ['lanceren.md', 'privacy-audit.md', 'credits.md', 'app.md', 'webportals.md', 'publiceren.md']) {
     expect(fs.existsSync(path.join(ROOT, 'docs', doc)), doc).toBe(true);
   }
   const LIMITS = { 'titel.txt': 30, 'korte-beschrijving.txt': 80, 'volledige-beschrijving.txt': 4000 };

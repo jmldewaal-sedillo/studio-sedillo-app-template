@@ -76,7 +76,7 @@ test('testversie: altijd noindex, geen eigen adres, eigen naam en een cache per 
   const manifest = JSON.parse(read('test', 'manifest.webmanifest'));
   expect(manifest.name.startsWith('TEST – ')).toBe(true);
   expect(manifest.short_name.length).toBeLessThanOrEqual(12);
-  const leaked = files.filter(f => /^(tests|tools|docs|store|android|node_modules|\.github|\.git)\//.test(f) || /\.md$|^package|^playwright|^\.template$|^capacitor|^bouw\.config/.test(f));
+  const leaked = files.filter(f => /^(tests|tools|docs|store|android|ios|node_modules|\.github|\.git)\//.test(f) || /\.md$|^package|^playwright|^\.template$|^capacitor|^bouw\.config/.test(f));
   expect(leaked, 'alleen de app zelf gaat naar de site').toEqual([]);
   expect(files).toContain('.nojekyll');
 });

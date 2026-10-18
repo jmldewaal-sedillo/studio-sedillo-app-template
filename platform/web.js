@@ -4,7 +4,7 @@
 //
 // Elk bouwdoel heeft zo'n bestand met precies dezelfde onderdelen (een test controleert dat):
 //   platform/web.js        browser, met service worker
-//   platform/android.js    Capacitor-app, alles in de app, zonder service worker
+//   platform/app.js        Capacitor-app voor Android én iOS, alles in de app, zonder service worker
 //   platform/portal.js     webportal (CrazyGames, Poki, …), zonder service worker en externe links
 //   platform/hoofdsite.js  alleen de pagina's privacy en verwijderen op studiosedillo.com
 // tools/bouw.mjs zet het juiste bestand in de pagina's. De spelcode vraagt aan Platform wat

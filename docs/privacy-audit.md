@@ -7,7 +7,7 @@ onderbouwt de antwoorden in het Data safety-formulier en de privacyverklaring
 
 ## Conclusie
 
-- De app doet **geen enkel verzoek naar buiten**. De Android-app en een portal-zip hebben al
+- De app doet **geen enkel verzoek naar buiten**. De app (Android en iOS) en een portal-zip hebben al
   hun bestanden bij zich; de webversie haalt alleen (GET) zijn eigen bestanden op bij het
   adres waar hij zelf staat. Er wordt niets verzonden.
 - Alles wat de app onthoudt staat in **localStorage** op het toestel, onder sleutels die met
@@ -27,7 +27,7 @@ Dit geldt voor de template. **Controleer elk punt opnieuw** zodra de app zelf er
 | Alleen `storage.js` raakt de opslag aan | `tests/opslag.spec.js` |
 | Elke sleutel die de app schrijft staat in de tabel hieronder | `tests/opslag.spec.js` |
 | "Alle gegevens verwijderen" laat geen sleutel, geen cache en geen service worker achter | `tests/wissen.spec.js` |
-| De Android- en de portal-versie: geen service worker, geen verzoek naar buiten; portal ook geen link naar buiten | `tests/bouwdoelen.spec.js` |
+| De app (Android en iOS) en de portal-versie: geen service worker, geen verzoek naar buiten; portal ook geen link naar buiten | `tests/bouwdoelen.spec.js` |
 | Advertenties staan uit en er zit geen advertentie-plug-in of portal-SDK in | `tests/bouwdoelen.spec.js` |
 | "Profiel verwijderen" wist alleen dat profiel | `tests/wissen.spec.js` |
 | Exporteren en importeren geeft precies dezelfde gegevens terug | `tests/overzetten.spec.js` |
@@ -52,7 +52,7 @@ migratie die de oude sleutel leest en overzet, en een test die dat bewijst.
 
 | Bouwdoel | Waar de opslag staat | Wat er naar buiten gaat |
 |---|---|---|
-| android | localStorage van de app op het toestel | niets |
+| app (Android en iOS) | localStorage van de app op het toestel | niets |
 | webportal | localStorage in de browser, bij het adres van de portal | niets vanuit de app zolang er geen SDK in zit; de portal zelf heeft een eigen privacyverklaring |
 | web / testversie | localStorage in de browser, bij het adres van de site | alleen het ophalen van de eigen bestanden |
 

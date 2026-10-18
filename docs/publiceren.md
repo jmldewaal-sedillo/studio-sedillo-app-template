@@ -8,7 +8,8 @@ indienen de gelinkte pagina's nog een keer na en zet de datum erbij.*
 Vaste gegevens:
 
 - Uitgever: **Studio Sedillo**, contact **studio.sedillo@gmail.com**.
-- De app is een Android-app (Capacitor, alle bestanden in de app); er is geen app-website.
+- De app is een Capacitor-app voor Android en iOS (alle bestanden in de app); er is geen app-website.
+  Deze checklist gaat over Google Play; voor de App Store zie `docs/app.md` en `Apps/docs/apple-developer.md`.
 - Package name: **com.studiosedillo.{{SLUG}}**
 - Privacybeleid: `https://studiosedillo.com/{{REPO}}/privacy`
 - Gegevens verwijderen: `https://studiosedillo.com/{{REPO}}/delete`
@@ -26,7 +27,7 @@ Nog te besluiten (vul in):
 
 - [ ] De testversie nalopen op https://jmldewaal-sedillo.github.io/{{REPO}}-test/ en akkoord geven.
 - [ ] App aanmaken in Play Console: naam "{{APP_NAAM}}", gratis.
-- [ ] De **upload key** maken en veilig opbergen, en de app bouwen (`docs/android.md`).
+- [ ] De **upload key** maken en veilig opbergen, en de app bouwen (`docs/app.md`).
 - [ ] De `.aab` uploaden naar **Interne test** en op de eigen telefoon proberen.
 - [ ] Akkoord geven om de privacy- en verwijderpagina op studiosedillo.com te zetten.
 - [ ] App-content invullen met de antwoorden uit dit document: privacybeleid-URL,
@@ -117,7 +118,7 @@ Bronnen: [previewmateriaal][assets], [metadatabeleid][metadata]. Formaten: `stor
 
 ### 7. Android-app (Capacitor)
 
-Zie `docs/android.md`. Bron: [target-API-eisen][targetapi].
+Zie `docs/app.md`. Bron: [target-API-eisen][targetapi].
 
 - [ ] App gebouwd met Capacitor; `targetSdkVersion` voldoet aan de eis van dat moment.
 - [ ] Geen permissie `AD_ID`, geen locatie- of meldingspermissie.

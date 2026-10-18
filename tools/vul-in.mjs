@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 const SOURCE = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const OPEN = '{' + '{', CLOSE = '}' + '}';            // zo staat er in dit bestand zelf geen placeholder
-const SKIP_DIRS = new Set(['.git', 'node_modules', 'test-results', 'playwright-report', '.test-build', '_site', 'dist', 'android']);
+const SKIP_DIRS = new Set(['.git', 'node_modules', 'test-results', 'playwright-report', '.test-build', '_site', 'dist', 'android', 'ios']);
 const TEXT_EXT = new Set(['.html', '.css', '.js', '.mjs', '.json', '.webmanifest', '.md', '.txt', '.yml', '.yaml', '.sh', '.svg', '.xml']);
 const TEXT_NAMES = new Set(['.gitignore']);
 const ONLY_IN_TEMPLATE = ['.template', 'TEMPLATE.md', 'tools/vul-in.mjs'];

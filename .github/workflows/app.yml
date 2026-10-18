@@ -1,0 +1,108 @@
+name: App bouwen (Android en iOS)
+
+# Bouwdoel "app" (Apps/CLAUDE.md, sectie 11; docs/app.md): dezelfde bestanden (dist/app/) in twee Capacitor-apps.
+#   android  bouwt een test-APK (debug), te downloaden onder "Artifacts" van de run en direct op een
+#            Android-telefoon te installeren. Niet voor de Play Store: die krijgt een ondertekende .aab.
+#   ios      bouwt de app voor de iOS-simulator, zonder ondertekenen: bewijst dat het Xcode-project klopt.
+# Doet pas iets als de projecten er zijn (npm run app:init, daarna android/ en ios/ committen), en alleen in de
+# hoofdrepo; de test-repo (<naam>-test) publiceert alleen de testversie.
+
+on:
+  push:
+    paths-ignore: ['**.md']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android:
+    name: Android (test-APK)
+    if: ${{ !endsWith(github.event.repository.name, '-test') && github.event.repository.name != 'studio-sedillo-app-template' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Is er een Android-project?
+        id: project
+        run: |
+          if [ -f android/gradlew ]; then echo "er=true" >> "$GITHUB_OUTPUT"; else
+            echo "er=false" >> "$GITHUB_OUTPUT"
+            echo "Nog geen android/: eerst npm run app:init (docs/app.md)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.project.outputs.er == 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        if: steps.project.outputs.er == 'true'
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Bouwdoel app en Capacitor-sync
+        if: steps.project.outputs.er == 'true'
+        run: npm ci && node tools/bouw.mjs app && npx cap sync android
+
+      - name: Test-APK bouwen
+        if: steps.project.outputs.er == 'true'
+        working-directory: android
+        run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon
+
+      - name: APK een herkenbare naam geven
+        if: steps.project.outputs.er == 'true'
+        run: |
+          mkdir -p out
+          cp android/app/build/outputs/apk/debug/*.apk "out/${{ github.event.repository.name }}-test-${GITHUB_SHA::7}.apk"
+          echo "Test-APK gebouwd (${GITHUB_SHA::7}); te downloaden onder Artifacts." >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: steps.project.outputs.er == 'true'
+        with:
+          name: test-apk
+          path: out/*.apk
+          retention-days: 14
+          if-no-files-found: error
+
+  ios:
+    name: iOS (simulator, zonder ondertekenen)
+    if: ${{ !endsWith(github.event.repository.name, '-test') && github.event.repository.name != 'studio-sedillo-app-template' }}
+    runs-on: macos-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Is er een iOS-project?
+        id: project
+        run: |
+          if [ -d ios/App/App.xcodeproj ]; then echo "er=true" >> "$GITHUB_OUTPUT"; else
+            echo "er=false" >> "$GITHUB_OUTPUT"
+            echo "Nog geen ios/: eerst npm run app:init (docs/app.md)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.project.outputs.er == 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Bouwdoel app en Capacitor-sync
+        if: steps.project.outputs.er == 'true'
+        run: npm ci && node tools/bouw.mjs app && npx cap sync ios
+
+      - name: Bouwen voor de simulator
+        if: steps.project.outputs.er == 'true'
+        run: |
+          xcodebuild -version
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/ios CODE_SIGNING_ALLOWED=NO build
+          echo "iOS-simulatorbuild geslaagd (${GITHUB_SHA::7})." >> "$GITHUB_STEP_SUMMARY"

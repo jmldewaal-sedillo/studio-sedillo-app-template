@@ -31,4 +31,4 @@ Nog niets.
 | Wat | Waarvoor | Licentie |
 |---|---|---|
 | Playwright | tests | Apache-2.0 |
-| Capacitor (zit wel in de Android-app, als schil) | Android-app | MIT |
+| Capacitor (zit wel in de app, als schil) | app voor Android en iOS | MIT |

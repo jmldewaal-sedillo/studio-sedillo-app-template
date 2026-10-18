@@ -4,7 +4,7 @@ name: Testen en publiceren
 # Push naar main: zijn de tests groen, dan wordt er gepubliceerd op GitHub Pages, maar alleen:
 #   repo <naam>-test   -> de testversie op https://jmldewaal-sedillo.github.io/<naam>-test/ (noindex)
 #   repo <naam>        -> de webversie, pas als web.live in bouw.config.json aan staat ("lanceren web")
-# tools/bouw.mjs beslist dat. De Android-app en de portal-zips komen niet uit deze workflow.
+# tools/bouw.mjs beslist dat. De app (Android en iOS) komt uit app.yml; de portal-zips komen niet uit een workflow.
 
 on:
   push:

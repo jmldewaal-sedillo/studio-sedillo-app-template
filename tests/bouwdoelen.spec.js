@@ -1,4 +1,4 @@
-// Eén codebase, drie bouwdoelen (Apps/CLAUDE.md, sectie 11): android, webportals en web.
+// Eén codebase, drie bouwdoelen (Apps/CLAUDE.md, sectie 11): app (Android en iOS), webportals en web.
 // Deze tests openen de gebouwde versies uit dist/ (tests/start-server.mjs bouwt ze eerst).
 const fs = require('fs');
 const path = require('path');
@@ -26,13 +26,13 @@ function shape(file) {
 
 test('elke laag in platform/ heeft precies dezelfde onderdelen', async () => {
   const files = fs.readdirSync(path.join(ROOT, 'platform')).filter(f => f.endsWith('.js')).sort();
-  expect(files).toEqual(['android.js', 'hoofdsite.js', 'portal.js', 'web.js']);
+  expect(files).toEqual(['app.js', 'hoofdsite.js', 'portal.js', 'web.js']);
   const web = shape('web.js');
   expect(web.shape.length).toBeGreaterThan(8);
   for (const file of files) expect(shape(file).shape, file).toEqual(web.shape);
   // Wat per bouwdoel vastligt.
   expect(shape('web.js').platform).toMatchObject({ DOEL: 'web', SERVICE_WORKER: true, EXTERNE_LINKS: true });
-  expect(shape('android.js').platform).toMatchObject({ DOEL: 'android', SERVICE_WORKER: false, EXTERNE_LINKS: true });
+  expect(shape('app.js').platform).toMatchObject({ DOEL: 'app', SERVICE_WORKER: false, EXTERNE_LINKS: true });
   expect(shape('portal.js').platform).toMatchObject({ DOEL: 'portal', SERVICE_WORKER: false, EXTERNE_LINKS: false });
   for (const file of files) expect(shape(file).platform.advertenties.beschikbaar, `${file}: advertenties staan uit`).toBe(false);
   expect(appConfig().ADVERTENTIES, 'ADVERTENTIES staat op false tot Jenn akkoord geeft').toBe(false);
@@ -47,19 +47,19 @@ test('de spelcode kijkt nooit zelf op welk bouwdoel ze draait', async () => {
   expect(offenders).toEqual([]);
 });
 
-test.describe('bouwdoel android', () => {
+test.describe('bouwdoel app (Android en iOS)', () => {
   test.use({ serviceWorkers: 'allow' });
 
   test('alle bestanden in de app, zonder service worker, en de app werkt', async ({ page, request }) => {
-    const files = allFiles(path.join(DIST, 'android'));
+    const files = allFiles(path.join(DIST, 'app'));
     for (const gone of ['sw.js', 'manifest.webmanifest', 'CNAME', 'robots.txt', 'platform/web.js', 'platform/portal.js']) expect(files, gone).not.toContain(gone);
-    for (const must of ['index.html', 'privacy.html', 'delete.html', 'platform/android.js', 'storage.js', 'i18n/nl.js', 'icons/icon-192.png']) expect(files, must).toContain(must);
+    for (const must of ['index.html', 'privacy.html', 'delete.html', 'platform/app.js', 'storage.js', 'i18n/nl.js', 'icons/icon-192.png']) expect(files, must).toContain(must);
     expect(files.filter(f => /^(tests|tools|docs|store|node_modules)\//.test(f) || /\.md$/.test(f))).toEqual([]);
-    expect((await request.get('./dist/android/sw.js')).status()).toBe(404);
+    expect((await request.get('./dist/app/sw.js')).status()).toBe(404);
 
-    const problems = await open(page, './dist/android/');
+    const problems = await open(page, './dist/app/');
     await expect(page.locator('#app-title')).toHaveText(appConfig().APP_NAAM);
-    expect(await page.evaluate(() => window.Platform.DOEL)).toBe('android');
+    expect(await page.evaluate(() => window.Platform.DOEL)).toBe('app');
     await expect(page.locator('link[rel="manifest"]')).toHaveCount(0);
     await page.locator('#btn-demo').click();
     await page.reload();
@@ -84,7 +84,7 @@ test.describe('bouwdoel android', () => {
       } } };
     });
     const back = () => page.evaluate(() => window.__back());
-    const problems = await open(page, './dist/android/');
+    const problems = await open(page, './dist/app/');
     await page.locator('#btn-settings').click();
     await page.locator('#btn-credits').click();
     await expect(page.locator('#screen-credits')).toBeVisible();
@@ -104,7 +104,7 @@ test.describe('bouwdoel android', () => {
     expect(await page.evaluate(() => window.__exits), 'op het startscherm sluit de app').toBe(1);
 
     // Vanaf de privacypagina terug naar de app.
-    await page.goto('./dist/android/privacy.html');
+    await page.goto('./dist/app/privacy.html');
     await expect(page.locator('#page-text h1')).toBeVisible();
     await back();
     await expect(page.locator('#app-title')).toBeVisible();
@@ -122,7 +122,7 @@ test.describe('bouwdoel webportal', () => {
     expect(listing.bad, 'de zip is heel').toBeNull();
     expect(listing.names).toEqual(allFiles(path.join(DIST, 'portal-proef')));
     for (const must of ['index.html', 'platform/portal.js', 'storage.js', 'privacy.html']) expect(listing.names, must).toContain(must);
-    for (const gone of ['sw.js', 'manifest.webmanifest', 'CNAME', 'robots.txt', 'platform/web.js', 'platform/android.js']) expect(listing.names, gone).not.toContain(gone);
+    for (const gone of ['sw.js', 'manifest.webmanifest', 'CNAME', 'robots.txt', 'platform/web.js', 'platform/app.js']) expect(listing.names, gone).not.toContain(gone);
     expect(listing.names.filter(f => /^(tests|tools|docs|store|node_modules|\.git)/.test(f) || /\.md$|^package|^capacitor/.test(f))).toEqual([]);
   });
 
@@ -165,8 +165,8 @@ test.describe('bouwdoel webportal', () => {
     expect(fs.existsSync(path.join(copy, 'dist', 'portal-proef', 'platform', 'portals', 'proef.js'))).toBe(true);
     bouw(copy, 'portal', 'andere');
     expect(fs.readFileSync(path.join(copy, 'dist', 'portal-andere', 'index.html'), 'utf8')).not.toContain('platform/portals/');
-    bouw(copy, 'android');
-    expect(allFiles(path.join(copy, 'dist', 'android')).filter(f => f.includes('portals'))).toEqual([]);
+    bouw(copy, 'app');
+    expect(allFiles(path.join(copy, 'dist', 'app')).filter(f => f.includes('portals'))).toEqual([]);
   });
 });
 
@@ -193,11 +193,14 @@ test('Capacitor: package-naam, de map van het bouwdoel en de scripts', async () 
   const cap = JSON.parse(fs.readFileSync(path.join(ROOT, 'capacitor.config.json'), 'utf8'));
   expect(cap.appId).toBe(`com.studiosedillo.${slug()}`);
   expect(cap.appName).toBe(appConfig().APP_NAAM);
-  expect(cap.webDir).toBe('dist/android');
+  expect(cap.webDir).toBe('dist/app');
+  expect(cap.android.webContentsDebuggingEnabled).toBe(false);
+  expect(cap.ios.webContentsDebuggingEnabled).toBe(false);
   const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
-  for (const dep of ['@capacitor/core', '@capacitor/android', '@capacitor/app']) expect(pkg.dependencies[dep], dep).toBeTruthy();
+  for (const dep of ['@capacitor/core', '@capacitor/android', '@capacitor/ios', '@capacitor/app']) expect(pkg.dependencies[dep], dep).toBeTruthy();
   expect(pkg.devDependencies['@capacitor/cli']).toBeTruthy();
-  for (const script of ['bouw:android', 'android:init', 'android:sync']) expect(pkg.scripts[script], script).toContain('tools/bouw.mjs android');
+  for (const script of ['bouw:app', 'app:init', 'app:sync']) expect(pkg.scripts[script], script).toContain('tools/bouw.mjs app');
+  expect(pkg.scripts['app:init']).toMatch(/cap add android && cap add ios/);
   // Advertenties komen er alleen in na akkoord: geen AdMob-plug-in in een nieuwe app.
   expect(Object.keys({ ...pkg.dependencies, ...pkg.devDependencies }).filter(d => /admob|ads/i.test(d))).toEqual([]);
   const build = JSON.parse(fs.readFileSync(path.join(ROOT, 'bouw.config.json'), 'utf8'));

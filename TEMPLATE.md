@@ -2,7 +2,7 @@
 
 Dit is de template waar elke nieuwe app van Studio Sedillo mee begint. De opzet volgt
 `Apps/CLAUDE.md`, sectie 11 ("App-structuur Studio Sedillo"): één codebase, drie bouwdoelen
-(Android met Capacitor, webportals, en later eventueel web), een testversie op github.io, de
+(de app voor Android en iOS met Capacitor, webportals, en later eventueel web), een testversie op github.io, de
 blocklist tegen privégegevens en de vindbaar-schakelaar op "nee".
 
 Maak een app niet met de hand uit deze repo, maar met het script (in de map `Apps/`):

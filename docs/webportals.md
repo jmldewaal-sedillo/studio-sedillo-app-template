@@ -51,5 +51,5 @@ portal die advertenties verplicht, valt dan af.
 ## Opslag en voortgang
 
 Een portal draait de app in een kader op zijn eigen adres. De voortgang hoort bij dat adres
-en staat los van de Android-app. Sommige portals wissen de opslag of bieden een eigen opslag
+en staat los van de app voor Android en iOS. Sommige portals wissen de opslag of bieden een eigen opslag
 via de SDK; dat komt dan in de laag van die portal, via `storage.js`.

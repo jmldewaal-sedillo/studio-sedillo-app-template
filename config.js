@@ -21,7 +21,7 @@ window.APP_CONFIG = {
   // (The test version is always noindex, whatever this says.)
   VINDBAAR: false,
 
-  // Advertising (AdMob, Android only). Stays false until Jenn approves; never true in a
+  // Advertising (AdMob, in the app for Android and iOS). Stays false until Jenn approves; never true in a
   // children's app. See Apps/CLAUDE.md, section 11, point 5.
   ADVERTENTIES: false,
 

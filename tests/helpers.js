@@ -67,7 +67,7 @@ async function hold(page) {
 }
 
 /** Alle tekstbestanden onder een map (zonder de mappen die niet bij de bron horen). */
-function textFiles(dir, skip = ['.git', 'node_modules', 'test-results', 'playwright-report', '.test-build', '_site', 'dist', 'android', 'screenshots']) {
+function textFiles(dir, skip = ['.git', 'node_modules', 'test-results', 'playwright-report', '.test-build', '_site', 'dist', 'android', 'ios', 'screenshots']) {
   const TEXT = /\.(html|css|js|mjs|json|webmanifest|md|txt|yml|yaml|sh|svg|xml)$/;
   const out = [];
   (function walk(d) {
@@ -85,7 +85,7 @@ function textFiles(dir, skip = ['.git', 'node_modules', 'test-results', 'playwri
 function copyOfApp(change) {
   const os = require('os');
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'app-'));
-  const skip = ['.git', 'node_modules', 'test-results', 'playwright-report', '.test-build', '_site', 'dist', 'android', 'tests'];
+  const skip = ['.git', 'node_modules', 'test-results', 'playwright-report', '.test-build', '_site', 'dist', 'android', 'ios', 'tests'];
   (function copy(from, to) {
     for (const name of fs.readdirSync(from)) {
       if (from === ROOT && skip.includes(name)) continue;

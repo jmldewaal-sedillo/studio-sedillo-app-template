@@ -1,17 +1,18 @@
 // ============================================================
-// {{APP_NAAM}} – platform/android.js
-// De dunne laag voor het bouwdoel ANDROID (Capacitor). Alle bestanden zitten in de app:
-// geen service worker, geen netwerk nodig. Zie platform/web.js voor de onderdelen en
-// docs/android.md voor het bouwen.
+// {{APP_NAAM}} – platform/app.js
+// De dunne laag voor het bouwdoel APP: Capacitor, voor Android én iOS uit dezelfde bestanden.
+// Alle bestanden zitten in de app: geen service worker, geen netwerk nodig. Zie platform/web.js
+// voor de onderdelen en docs/app.md voor het bouwen.
 // ============================================================
 window.Platform = {
-  DOEL: 'android',
+  DOEL: 'app',
   SERVICE_WORKER: false,
   EXTERNE_LINKS: true,           // Capacitor opent een link naar buiten in de browser van de telefoon
   TERUG_URL: './',
 
   start(app) {
     // De terugknop van Android: een stap terug in de app, en op het startscherm de app sluiten.
+    // iOS heeft geen terugknop; daar komt dit nooit.
     // De plug-in @capacitor/app zit er alleen in de echte app; in een browser gebeurt er niets.
     const plugin = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
     if (!plugin) return;

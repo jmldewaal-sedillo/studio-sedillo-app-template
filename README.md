@@ -1,7 +1,7 @@
 # {{APP_NAAM}}
 
 Een app van Studio Sedillo. Vanilla HTML, CSS en JavaScript: één codebase met drie
-bouwdoelen (Android, webportals, en later eventueel web). De vaste opzet staat in
+bouwdoelen (de app voor Android en iOS, webportals, en later eventueel web). De vaste opzet staat in
 `Apps/CLAUDE.md`, sectie 11 ("App-structuur Studio Sedillo"); wat alleen voor deze app geldt
 in `CLAUDE.md` hier. De planning en het logboek staan in `ROADMAP.md`, de weg naar de
 lancering in `docs/lanceren.md`.
@@ -13,14 +13,14 @@ lancering in `docs/lanceren.md`.
 | Gegevens verwijderen | https://studiosedillo.com/{{REPO}}/delete (na de lancering) |
 | Repo | https://github.com/jmldewaal-sedillo/{{REPO}} (remote `origin`) |
 | Repo testversie | https://github.com/jmldewaal-sedillo/{{REPO}}-test (remote `test`) |
-| Android package | `com.studiosedillo.{{SLUG}}` |
+| Package / bundle-ID (Android en iOS) | `com.studiosedillo.{{SLUG}}` |
 | Prefix opslag | `{{SLUG}}.` |
 
 ## De bouwdoelen
 
 | Bouwdoel | Commando | Uitkomst |
 |---|---|---|
-| android | `npm run android:sync` | `dist/android/` in het Android-project (Capacitor); zie `docs/android.md` |
+| app (Android en iOS) | `npm run app:sync` | `dist/app/` in de projecten `android/` en `ios/` (Capacitor); test-APK en iOS-build via `app.yml`; zie `docs/app.md` |
 | webportal | `node tools/bouw.mjs portal <naam>` | `dist/portal-<naam>.zip`; zie `docs/webportals.md` |
 | testversie | `git push test HEAD:main` | de workflow publiceert op github.io |
 | hoofdsite | `npm run bouw:hoofdsite` | de pagina's privacy en verwijderen voor studiosedillo.com |
@@ -47,7 +47,7 @@ De tests draaien op drie formaten (telefoon staand en liggend, tablet) en zetten
 schermafbeeldingen in `tests/screenshots/`. Ze bouwen ook elk bouwdoel en openen het. Ze
 controleren onder meer: laden zonder fouten en zonder verzoeken naar buiten, taal wisselen,
 dat verwijderen geen enkele `{{SLUG}}.`-sleutel achterlaat, dat exporteren en importeren
-dezelfde gegevens teruggeeft, dat de Android- en portal-versie geen service worker hebben,
+dezelfde gegevens teruggeeft, dat de app en de portal-versie geen service worker hebben,
 dat de portal-versie geen links naar buiten heeft, en dat de testversie noindex is.
 
 ## Werkwijze
@@ -71,12 +71,12 @@ de repo; `Apps/tools/nieuwe-app.sh` heeft dat al gedaan).
 | `storage.js` | Alle opslag, altijd met de prefix `{{SLUG}}.`; wissen, exporteren, importeren |
 | `i18n/` | De teksten per taal, ook die van de privacyverklaring |
 | `common.js`, `pages.js` | Taalkeuze en de pagina's privacy en verwijderen |
-| `platform/` | De dunne laag per bouwdoel: `android.js`, `portal.js`, `web.js`, `hoofdsite.js` |
-| `capacitor.config.json` | De Android-app (Capacitor) |
+| `platform/` | De dunne laag per bouwdoel: `app.js`, `portal.js`, `web.js`, `hoofdsite.js` |
+| `capacitor.config.json` | De app voor Android en iOS (Capacitor) |
 | `bouw.config.json` | Portals, en of de webversie live staat |
 | `sw.js`, `manifest.webmanifest` | Alleen bouwdoel web en de testversie: cache voor gebruik zonder internet |
 | `privacy.html`, `delete.html`, `verwijderen.html` | Privacyverklaring, verwijderpagina, doorverwijzing |
-| `docs/` | Lanceren, Android, portals, checklist voor Google Play, privacy-audit, credits |
+| `docs/` | Lanceren, app (Android en iOS), portals, checklist voor Google Play, privacy-audit, credits |
 | `store/` | Teksten en beeldmateriaal voor Google Play |
 | `tools/` | `bouw.mjs` (de bouwdoelen), lokale server, iconen, hooks tegen privégegevens |
 | `tests/` | Playwright-tests |

@@ -1,7 +1,8 @@
 // Bouwt de app voor één bouwdoel. Eén codebase, per bouwdoel alleen een dunne laag
 // (platform/<doel>.js). Zie Apps/CLAUDE.md, sectie 11, "App-structuur Studio Sedillo".
 //
-//   node tools/bouw.mjs android              -> dist/android/            voor Capacitor (docs/android.md)
+//   node tools/bouw.mjs app                  -> dist/app/                voor Capacitor: Android én iOS (docs/app.md)
+//   node tools/bouw.mjs android | ios        -> hetzelfde: beide apps krijgen dezelfde bestanden
 //   node tools/bouw.mjs portal <naam>        -> dist/portal-<naam>.zip   upload voor een webportal (docs/webportals.md)
 //   node tools/bouw.mjs test [commit]        -> dist/test/               testversie voor github.io, altijd noindex
 //   node tools/bouw.mjs web                  -> dist/web/                PWA voor <slug>.studiosedillo.com ("lanceren web")
@@ -12,7 +13,7 @@
 //   --uit <map>                              andere uitvoermap
 //
 // Per bouwdoel:
-//   android, portal   geen service worker, geen manifest; portal ook geen links naar buiten
+//   app, portal       geen service worker, geen manifest; portal ook geen links naar buiten
 //   test, web         service worker en manifest; noindex tenzij VINDBAAR in config.js true is (test: altijd)
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { deflateRawSync } from 'node:zlib';
@@ -41,7 +42,7 @@ if (!/^[a-z0-9]+$/.test(SLUG)) fail(`config.js bevat geen geldige slug: "${SLUG}
 
 // Wat niet bij de app hoort en dus in geen enkel bouwdoel komt.
 const NOT_IN_APP = new Set([
-  '.git', '.github', '.gitignore', '.template', '.test-build', '_site', 'dist', 'android', 'node_modules',
+  '.git', '.github', '.gitignore', '.template', '.test-build', '_site', 'dist', 'android', 'ios', 'node_modules',
   'docs', 'store', 'tests', 'tools', 'test-results', 'playwright-report', 'platform',
   'package.json', 'package-lock.json', 'playwright.config.js', 'capacitor.config.json', 'bouw.config.json',
 ]);
@@ -130,12 +131,12 @@ function zip(dir, target) {
 }
 
 // ---------- de bouwdoelen ----------
-function bouwAndroid() {
-  const out = outDir('android');
+function bouwApp() {
+  const out = outDir('app');
   copyTree(ROOT, out, name => NOT_IN_APP.has(name) || name === '.nojekyll');
-  finishPages(out, { platform: 'android', noindex: false, serviceWorker: false });
-  mustExist(out, ['index.html', 'privacy.html', 'delete.html', 'platform/android.js']);
-  console.log(`Android: ${relative(process.cwd(), out)} (${allFiles(out).length} bestanden, zonder service worker). Daarna: npx cap sync android`);
+  finishPages(out, { platform: 'app', noindex: false, serviceWorker: false });
+  mustExist(out, ['index.html', 'privacy.html', 'delete.html', 'platform/app.js']);
+  console.log(`App (Android en iOS): ${relative(process.cwd(), out)} (${allFiles(out).length} bestanden, zonder service worker). Daarna: npx cap sync`);
 }
 
 function bouwPortal(naam) {
@@ -208,7 +209,7 @@ function publiceren(repo) {
 }
 
 switch (doel) {
-  case 'android': bouwAndroid(); break;
+  case 'app': case 'android': case 'ios': bouwApp(); break;
   case 'portal': bouwPortal(rest[0]); break;
   case 'test': bouwWebOfTest('test', rest[0] || ''); break;
   case 'web': bouwWebOfTest('web'); break;
@@ -222,6 +223,6 @@ switch (doel) {
     break;
   }
   default:
-    console.error(readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').slice(3, 13).map(l => l.replace(/^\/\/ ?/, '')).join('\n'));
+    console.error(readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').slice(3, 14).map(l => l.replace(/^\/\/ ?/, '')).join('\n'));
     process.exit(2);
 }

@@ -5,6 +5,6 @@ tests/screenshots/
 .test-build/
 _site/
 dist/
-# Android signing keys: never in Git (see docs/android.md)
+# Android signing keys: never in Git (see docs/app.md)
 *.keystore
 *.jks
