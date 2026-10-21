@@ -26,7 +26,8 @@ Nog te besluiten (vul in):
 ## Wat Jenn zelf moet doen (in deze volgorde)
 
 - [ ] De testversie nalopen op https://jmldewaal-sedillo.github.io/{{REPO}}-test/ en akkoord geven.
-- [ ] App aanmaken in Play Console: naam "{{APP_NAAM}}", gratis.
+- [ ] App aanmaken in Play Console: naam "{{APP_NAAM}}", gratis. Pas als de twee verklaringen
+      hieronder ("0. Verklaringen bij App maken") kloppen.
 - [ ] De **upload key** maken en veilig opbergen, en de app bouwen (`docs/app.md`).
 - [ ] De `.aab` uploaden naar **Interne test** en op de eigen telefoon proberen.
 - [ ] Akkoord geven om de privacy- en verwijderpagina op studiosedillo.com te zetten.
@@ -40,6 +41,16 @@ Nog te besluiten (vul in):
 ---
 
 ## Checklist per eis
+
+### 0. Verklaringen bij App maken
+
+Vaste regels: `Apps/CLAUDE.md`, sectie 11, punt 8.
+
+- [ ] **Programmabeleid voor ontwikkelaars:** alle punten hieronder klaar, en de vaste regels
+      kloppen (inhoud, eigen of vrij materiaal in `docs/credits.md`, geen misleiding en geen
+      knoppen zonder werking, echte offline app, gegevens, kinderen, geld).
+- [ ] **Amerikaanse exportwetten:** geen eigen versleuteling in de app (alleen HTTPS van het
+      systeem); `ITSAppUsesNonExemptEncryption = false` in `ios/App/App/Info.plist`.
 
 ### 1. Privacyverklaring
 

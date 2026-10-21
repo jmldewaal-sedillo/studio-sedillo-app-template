@@ -11,7 +11,7 @@
     "bouw:test": "node tools/bouw.mjs test",
     "bouw:web": "node tools/bouw.mjs web",
     "bouw:hoofdsite": "node tools/bouw.mjs hoofdsite",
-    "app:init": "node tools/bouw.mjs app && cap add android && cap add ios",
+    "app:init": "node tools/bouw.mjs app && cap add android && cap add ios && node tools/ios-geen-versleuteling.mjs",
     "app:sync": "node tools/bouw.mjs app && cap sync",
     "android:open": "cap open android",
     "ios:open": "cap open ios"
