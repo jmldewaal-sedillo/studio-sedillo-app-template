@@ -31,6 +31,10 @@ Dit geldt voor de template. **Controleer elk punt opnieuw** zodra de app zelf er
 | Advertenties staan uit en er zit geen advertentie-plug-in of portal-SDK in | `tests/bouwdoelen.spec.js` |
 | "Profiel verwijderen" wist alleen dat profiel | `tests/wissen.spec.js` |
 | Exporteren en importeren geeft precies dezelfde gegevens terug | `tests/overzetten.spec.js` |
+| Een code wordt alleen ingelezen via `AppStorage.cleanPart`; vijandige codes en kapotte opslag breken niets | `tests/beveiliging.spec.js` |
+| Strenge Content-Security-Policy in elke pagina en elk bouwdoel | `tests/beveiliging.spec.js` |
+| Geen trackers, analytics, session replay of lettertypen van buiten; alleen bekende adressen in de app | `tests/inhoud.spec.js` |
+| Android: geen cloud-back-up, geen advertentie-ID zonder advertenties | `tests/beveiliging.spec.js`, `app.yml` (`tools/android-instellingen.mjs --check`) |
 
 ## Wat er lokaal staat
 
@@ -65,7 +69,8 @@ toe. Dit staat in de privacyverklaring.
 
 ## Wanneer deze audit opnieuw moet
 
-Bij elke wijziging die een verzoek naar buiten kan toevoegen of nieuwe gegevens bewaart:
+Bij elk nieuw onderdeel dat een profiel bewaart: eerst `cleanPart` in `app.js` en de tabel
+hierboven. Bij elke wijziging die een verzoek naar buiten kan toevoegen of nieuwe gegevens bewaart:
 cloud-opslag of accounts, statistieken, advertenties (AdMob) of verwijzingen naar andere
 apps, de SDK van een webportal, externe lettertypen of geluiden, pushmeldingen. Dan ook eerst de privacyverklaring en het
 Data safety-formulier bijwerken, vóór de functie live gaat.

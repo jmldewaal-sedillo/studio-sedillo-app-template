@@ -27,9 +27,12 @@ npm run app:init          # bouwt dist/app en maakt de mappen android/ en ios/
 git add android ios && git commit -m "App-projecten voor Android en iOS (Capacitor)"
 ```
 
-Controleer daarna in `android/app/src/main/AndroidManifest.xml` dat er geen permissie staat
-die de app niet nodig heeft: geen `com.google.android.gms.permission.AD_ID`, geen locatie,
-geen meldingen. `INTERNET` zet Capacitor er standaard in; de app gebruikt hem niet.
+`app:init` en `app:sync` draaien daarna `tools/android-instellingen.mjs`: geen cloud-back-up en
+niets mee bij het overzetten naar een ander toestel (`allowBackup="false"`,
+`data_extraction_rules.xml`), en geen `com.google.android.gms.permission.AD_ID` zolang
+`ADVERTENTIES` uit staat. De workflow `app.yml` controleert dat met `--check` en stopt als het
+niet klopt. Controleer verder dat er geen permissie staat die de app niet nodig heeft (geen
+locatie, geen meldingen). `INTERNET` zet Capacitor er standaard in; de app gebruikt hem niet.
 
 Aanraders (zoals in The Flush Factor):
 - Een eigen package-naam voor de test-APK, zodat hij naast de echte app kan staan: in
@@ -117,6 +120,11 @@ De app bewaart in localStorage van de WebView, met de prefix `{{SLUG}}.`, via `s
 Dat blijft staan tot de gebruiker de app verwijdert of de opslag wist. Wil een app later iets
 anders (bijvoorbeeld de plug-in Preferences), dan gaat dat via `storage.js` en `Platform`,
 met een migratie van de bestaande sleutels en een test die dat bewijst.
+
+"Voortgang overzetten" leest alleen een code als de app `AppStorage.cleanPart` heeft (in
+`app.js`): voor elk onderdeel dat een profiel bewaart controleert die type, bereik en lengte,
+en laat de rest weg. Nieuw onderdeel? Eerst in `cleanPart`, dan in `docs/privacy-audit.md`.
+Een cloud-back-up van Android neemt niets mee (zie "Eenmalig").
 
 ## Advertenties
 

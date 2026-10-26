@@ -44,7 +44,9 @@ portal die advertenties verplicht, valt dan af.
    welke portal het is.
 3. De SDK zelf laadt een bestand van de portal: dat is een verzoek naar buiten. Zet het in
    `docs/privacy-audit.md` en pas de test aan die verzoeken naar buiten verbiedt, alleen voor
-   dit bouwdoel.
+   dit bouwdoel. Zet het adres van de SDK (alleen `https://host`, zonder pad) in
+   `bouw.config.json` bij `"portalCsp": { "<naam>": ["https://…"] }`: alleen de zip van die portal
+   krijgt het dan in zijn Content-Security-Policy; de app en de andere bouwdoelen niet.
 4. Voeg een test toe in `tests/bouwdoelen.spec.js` die de zip van deze portal opent.
 5. Upload `dist/portal-<naam>.zip` bij de portal en noteer het in `ROADMAP.md`.
 

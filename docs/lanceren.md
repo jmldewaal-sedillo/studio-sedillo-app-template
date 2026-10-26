@@ -16,7 +16,8 @@ als Jenn "lanceren web" zegt.
       aankopen**, en het Families-beleid geldt.
 - [ ] Geld verdienen? Advertenties (AdMob) of aankopen kunnen pas nadat het zakelijke
       postadres bij de KvK is vastgelegd en het bezoekadres is afgeschermd. Tot dan blijft
-      `ADVERTENTIES` in `config.js` op `false`.
+      `ADVERTENTIES` en `AANKOPEN` in `config.js` op `false`. Gaan ze aan: eerst
+      `docs/publiceren.md`, punt 11 (toestemming, voorwaardenpagina, aankopen op een server controleren).
 - [ ] De slug `{{SLUG}}` en de package-naam `com.studiosedillo.{{SLUG}}` kloppen. Na de
       eerste upload naar de Play Store kunnen ze niet meer veranderen.
 
@@ -24,11 +25,14 @@ als Jenn "lanceren web" zegt.
 
 - [ ] De spelcode staat los van het bouwdoel: alles wat per bouwdoel verschilt gaat via
       `Platform` (`platform/*.js`), nooit rechtstreeks.
-- [ ] Alle opslag via `storage.js`, elke sleutel in `docs/privacy-audit.md`.
+- [ ] Alle opslag via `storage.js`, elke sleutel in `docs/privacy-audit.md`, en elk onderdeel dat
+      een profiel bewaart gecontroleerd in `AppStorage.cleanPart` (`app.js`) voor "Voortgang overzetten".
 - [ ] Elke tekst in elke taal in `i18n/`.
 - [ ] Geen verzoeken naar buiten, geen tracking, geen analytics (de tests bewaken dat).
 - [ ] Alles van buiten staat in `docs/credits.md`, met licentie.
-- [ ] `npm test` is groen.
+- [ ] Geen knoppen zonder werking, geen beloftes die de app niet waarmaakt.
+- [ ] `npm test` is groen, ook toegankelijkheid (contrast, knopnamen, toetsenbord) en beveiliging
+      (CSP, import). Overzicht: "Vaste controles" in `TEMPLATE.md` van de template.
 
 ## 3. Testen
 
@@ -59,7 +63,7 @@ Pas bij de lancering, na akkoord van Jenn (dit gaat live op studiosedillo.com).
 ## 6. Play Console (`docs/publiceren.md`)
 
 - [ ] App-content: privacybeleid-URL, advertenties, app-toegang, doelgroep, Data safety, IARC.
-- [ ] Store-pagina gevuld uit `store/`.
+- [ ] Store-pagina gevuld uit `store/`; `node tools/store-klaar.mjs` is groen.
 - [ ] **Gesloten test: 12 testers, 14 dagen aaneengesloten** (eis voor een nieuw persoonlijk
       ontwikkelaarsaccount). Feedback bijhouden.
 - [ ] Productietoegang aanvragen en de productierelease doen.
