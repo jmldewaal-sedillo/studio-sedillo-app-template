@@ -69,7 +69,7 @@ jobs:
           cp android/app/build/outputs/apk/debug/*.apk "out/${{ github.event.repository.name }}-test-${GITHUB_SHA::7}.apk"
           echo "Test-APK gebouwd (${GITHUB_SHA::7}); te downloaden onder Artifacts." >> "$GITHUB_STEP_SUMMARY"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: steps.project.outputs.er == 'true'
         with:
           name: test-apk
