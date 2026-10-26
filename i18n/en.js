@@ -69,13 +69,14 @@ window.TEKSTEN.en = {
   importDone: 'The progress has been restored.',
 
   // ----- credits -----
-  creditsMadeBy: 'Made by Studio Sedillo',
+  creditsMadeBy: 'Made by Studio Sedillo · KvK {kvk}',
   creditsOwn: 'Everything in this app is our own work.',
   creditsOthers: 'With thanks to:',
   creditsContact: 'Questions? {mail}',
 
   // ----- privacy and delete pages -----
   backToApp: 'Back to the app',
+  pageFooter: '\u00A9 {year} Studio Sedillo · KvK {kvk} · the Netherlands · {mail}',
   privacyLock: 'Both buttons are behind the parent lock. ',
   deleteLock: ', hold the parent lock twice',
   privacyPage: {
@@ -83,7 +84,7 @@ window.TEKSTEN.en = {
     sub: '{app} – last updated {date}',
     sections: [
       ['Who is responsible',
-        '<p>{app} is made and published by <strong>Studio Sedillo</strong>. For anything about privacy you can reach us at {mail}.</p>'],
+        '<p>{app} is made and published by <strong>Studio Sedillo</strong> (sole proprietorship, KvK {kvk}, the Netherlands). For anything about privacy you can reach us at {mail}.</p>'],
       ['In short',
         '<p>This app is built so that <strong>we receive no personal data at all</strong>. Everything the app remembers stays on your own device.</p>'],
       ['What is stored, and where',

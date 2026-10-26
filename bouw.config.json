@@ -6,5 +6,6 @@
   "hoofdsite": {
     "pad": "{{REPO}}"
   },
-  "portals": []
+  "portals": [],
+  "portalCsp": {}
 }

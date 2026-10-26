@@ -11,8 +11,8 @@
     "bouw:test": "node tools/bouw.mjs test",
     "bouw:web": "node tools/bouw.mjs web",
     "bouw:hoofdsite": "node tools/bouw.mjs hoofdsite",
-    "app:init": "node tools/bouw.mjs app && cap add android && cap add ios && node tools/ios-geen-versleuteling.mjs",
-    "app:sync": "node tools/bouw.mjs app && cap sync",
+    "app:init": "node tools/bouw.mjs app && cap add android && cap add ios && node tools/ios-geen-versleuteling.mjs && node tools/android-instellingen.mjs",
+    "app:sync": "node tools/bouw.mjs app && cap sync && node tools/android-instellingen.mjs",
     "android:open": "cap open android",
     "ios:open": "cap open ios"
   },
@@ -23,6 +23,7 @@
     "@capacitor/ios": "8.5.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@capacitor/cli": "8.5.3",
     "@playwright/test": "1.63.0"
   }

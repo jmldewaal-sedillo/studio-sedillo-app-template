@@ -126,13 +126,18 @@ Bronnen: [previewmateriaal][assets], [metadatabeleid][metadata]. Formaten: `stor
 - [ ] Telefoonscreenshots (2 tot 8) en tabletscreenshots, uit de echte app.
 - [ ] Ontwikkelaarsnaam Studio Sedillo, e-mail studio.sedillo@gmail.com, website https://studiosedillo.com.
 - [ ] Categorie en tags gekozen: …
+- [ ] `node tools/store-klaar.mjs` is groen: niets meer "INVULLEN", geen "gratis", "beste", "#1",
+      sterren of reviews, en de teksten kloppen met `ADVERTENTIES` en `AANKOPEN` in `config.js`.
+- [ ] Screenshots en teksten tonen alleen wat echt in de app zit; geen knoppen zonder werking.
 
 ### 7. Android-app (Capacitor)
 
 Zie `docs/app.md`. Bron: [target-API-eisen][targetapi].
 
 - [ ] App gebouwd met Capacitor; `targetSdkVersion` voldoet aan de eis van dat moment.
-- [ ] Geen permissie `AD_ID`, geen locatie- of meldingspermissie.
+- [ ] Geen permissie `AD_ID`, geen locatie- of meldingspermissie; geen cloud-back-up.
+      `tools/android-instellingen.mjs` regelt dat (draait mee met `app:init` en `app:sync`; `app.yml`
+      controleert het met `--check`).
 - [ ] Getest op een echte telefoon via de interne test: start in vliegtuigmodus, de terugknop werkt.
 
 ### 8. Gesloten test voor nieuwe persoonlijke accounts
@@ -152,6 +157,53 @@ die na 13 november 2023 zijn aangemaakt.
       dat de onderdelen er zijn).
 - [ ] Bij kinderen: geen verwerking op basis van toestemming, dus geen ouderlijke toestemming
       nodig. Dat verandert bij cloud-opslag, statistieken of advertenties.
+
+### 10. Wetten en regels (nalopen bij elke app)
+
+Geen juridisch advies; bij twijfel navragen (KvK, ACM, Autoriteit Persoonsgegevens).
+
+- [ ] **AVG:** zie punt 9. Gaat er ooit iets van het toestel af (account, cloud, statistieken), dan
+      eerst grondslag, privacyverklaring, Data safety en `docs/privacy-audit.md` bijwerken. Onder 16
+      jaar is in Nederland toestemming van een ouder nodig als toestemming de grondslag is.
+- [ ] **ePrivacy (cookies en vergelijkbare opslag):** alleen opslag die nodig is voor wat de gebruiker
+      vraagt (voortgang, taal). Dan is geen cookiebanner nodig. Statistieken of advertenties: eerst
+      toestemming vragen.
+- [ ] **COPPA (VS, onder 13):** geen persoonsgegevens van kinderen verzamelen. Met
+      `KINDER_APP: true` en niets dat het toestel verlaat is daaraan voldaan.
+- [ ] **Families-beleid van Google Play / Apple Kids-categorie:** zie punt 5; links naar buiten en
+      instellingen achter het ouderslot. Apple wil een slot dat een kind niet zomaar opent.
+- [ ] **European Accessibility Act:** spellen vallen er meestal buiten en een micro-onderneming is
+      vrijgesteld; volg toch WCAG 2.1 AA (`tests/toegankelijkheid.spec.js`).
+- [ ] **Handelsregister:** KvK-nummer in de app (credits), op de pagina's (voettekst) en in e-mails.
+- [ ] **DSA (handelaarsgegevens):** Google Play en Apple tonen naam, adres, e-mail en telefoon van
+      een handelaar. Eerst een zakelijk postadres regelen (Apps/CLAUDE.md, sectie 1).
+- [ ] **Mailing of nieuwsbrief:** alleen met aanmelding vooraf (opt-in), een afmeldlink in elke mail
+      en een bijgewerkte privacyverklaring. Nu niet van toepassing.
+
+### 11. Geld: advertenties en aankopen (alleen na akkoord van Jenn)
+
+Nooit in een kinder-app (`KINDER_APP: true`); `tests/geld.spec.js` bewaakt dat.
+
+**Advertenties** (`ADVERTENTIES: true`):
+- [ ] Zakelijk postadres geregeld (Google toont het adres).
+- [ ] Toestemming via Google UMP (TCF) **vóór** de eerste advertentie; zonder toestemming of onder
+      16 alleen niet-gepersonaliseerde advertenties. Een knop "Privacyopties" in Instellingen.
+- [ ] Privacyverklaring (welke gegevens AdMob gebruikt, met link), Data safety en de verklaring
+      "Bevat advertenties" in Play Console bijgewerkt; store-teksten zeggen niet meer "geen advertenties".
+- [ ] `tools/android-instellingen.mjs` laat dan de advertentie-ID toe; nergens anders.
+
+**Aankopen** (`AANKOPEN: true`):
+- [ ] Alleen via Google Play Billing / Apple In-App Purchase. Aankopen **op een server controleren**
+      (Play Developer API), nooit alleen in de app; wat iemand gekocht heeft komt nooit uit
+      localStorage of uit een code van "Voortgang overzetten".
+- [ ] Een voorwaardenpagina (`voorwaarden.html`, in elke taal) met: wat je koopt, dat virtuele
+      munten geen geldwaarde hebben, terugbetalen via Google Play / Apple, Nederlands recht en contact.
+- [ ] Bij de koopknop: de prijs (inclusief btw), eenmalig of abonnement, en de melding dat het
+      herroepingsrecht vervalt zodra de inhoud geleverd is (met een vinkje of knop vooraf).
+- [ ] **Abonnementen:** prijs, periode, automatische verlenging en hoe je opzegt direct bij de koopknop,
+      niet in kleine letters of verderop.
+- [ ] Geen knoppen zonder werking: niets laten zien dat nog niet te koop is.
+- [ ] Store-teksten zeggen niet meer "geen aankopen"; Play Console: "Bevat in-app-aankopen".
 
 ---
 

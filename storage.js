@@ -179,10 +179,16 @@
         if (!text.startsWith(CODE_PREFIX) || text.length > MAX_CODE) return null;
         const parsed = JSON.parse(fromBase64(text.slice(CODE_PREFIX.length)));
         if (!isPlainObject(parsed) || parsed.app !== SLUG || parsed.v !== 1 || !isPlainObject(parsed.data)) return null;
+        // Without a check for the parts a profile saves, no code is accepted: a code can come
+        // from anywhere, and the app must never trust what is in it (see cleanPart below).
+        if (typeof api.cleanPart !== 'function') return null;
         const out = {};
-        Object.keys(parsed.data).forEach(k => { if (SHORT_KEY.test(k) && parsed.data[k] !== undefined) out[k] = parsed.data[k]; });
-        // App-specific check of the contents: set AppStorage.cleanImport = data => data (or null to refuse).
-        return typeof api.cleanImport === 'function' ? api.cleanImport(out) : out;
+        Object.keys(parsed.data).forEach(k => {
+          if (!SHORT_KEY.test(k)) return;
+          const value = cleanValue(k, parsed.data[k]);
+          if (value !== undefined) out[k] = value;
+        });
+        return out;
       } catch (e) { return null; }
     },
     // Replaces everything on this device with the contents of the code.
@@ -195,8 +201,32 @@
       index = null;
       return true;
     },
-    cleanImport: null,
+    // Every app sets this: (part, value) => the cleaned value, or undefined to leave it out.
+    // Check type, range and size of everything; never pass on text that ends up as HTML.
+    cleanPart: null,
   };
+
+  // What may come in from a code. Settings: only short plain values, a known language.
+  // Profiles: rebuilt by loadIndex anyway. A profile part: only via the app's cleanPart.
+  function cleanValue(key, value) {
+    if (key === 'settings') {
+      if (!isPlainObject(value)) return undefined;
+      const out = {};
+      Object.keys(value).forEach(name => {
+        const v = value[name];
+        if (!/^[a-zA-Z][a-zA-Z0-9]{0,39}$/.test(name)) return;
+        if (typeof v === 'boolean' || (typeof v === 'number' && Number.isFinite(v)) || (typeof v === 'string' && v.length <= 100)) out[name] = v;
+      });
+      const langs = (root.APP_CONFIG && root.APP_CONFIG.TALEN) || [];
+      if ('language' in out && !langs.includes(out.language)) delete out.language;
+      return out;
+    }
+    if (key === 'profiles') return isPlainObject(value) && Array.isArray(value.list) && value.list.length <= MAX_PROFILES * 2 ? value : undefined;
+    const m = /^profile\.(p\d{1,6})\.([a-z0-9][a-z0-9-]{0,39})$/.exec(key);
+    if (!m) return undefined;
+    const cleaned = api.cleanPart(m[2], value);
+    return cleaned === null ? undefined : cleaned;
+  }
 
   function toBase64(text) {
     const bytes = new TextEncoder().encode(text);

@@ -38,7 +38,7 @@ test('startscherm laadt met de naam van de app, zonder fouten en zonder verzoeke
   await page.screenshot({ path: path.join(SHOTS, `${info.project.name}-instellingen.png`), fullPage: true });
 
   await page.locator('#btn-credits').click();
-  await expect(page.locator('#credits-made-by')).toHaveText('Gemaakt door Studio Sedillo');
+  await expect(page.locator('#credits-made-by')).toHaveText('Gemaakt door Studio Sedillo · KvK 42122276');
   await expect(page.locator('#credits-contact')).toContainText('studio.sedillo@gmail.com');
   await page.screenshot({ path: path.join(SHOTS, `${info.project.name}-credits.png`) });
   expectNoProblems(problems);

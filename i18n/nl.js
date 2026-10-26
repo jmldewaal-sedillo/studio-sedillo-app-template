@@ -69,13 +69,14 @@ window.TEKSTEN.nl = {
   importDone: 'De voortgang is teruggezet.',
 
   // ----- credits -----
-  creditsMadeBy: 'Gemaakt door Studio Sedillo',
+  creditsMadeBy: 'Gemaakt door Studio Sedillo · KvK {kvk}',
   creditsOwn: 'Alles in deze app is eigen werk.',
   creditsOthers: 'Met dank aan:',
   creditsContact: 'Vragen? {mail}',
 
   // ----- pagina's privacy en verwijderen -----
   backToApp: 'Terug naar de app',
+  pageFooter: '\u00A9 {year} Studio Sedillo · KvK {kvk} · Nederland · {mail}',
   privacyLock: 'Beide knoppen zitten achter het ouderslot. ',
   deleteLock: ', houd het ouderslot twee keer ingedrukt',
   privacyPage: {
@@ -83,7 +84,7 @@ window.TEKSTEN.nl = {
     sub: '{app} – laatst bijgewerkt op {date}',
     sections: [
       ['Wie is verantwoordelijk',
-        '<p>{app} wordt gemaakt en uitgegeven door <strong>Studio Sedillo</strong>. Voor alles over privacy kun je ons bereiken via {mail}.</p>'],
+        '<p>{app} wordt gemaakt en uitgegeven door <strong>Studio Sedillo</strong> (eenmanszaak, KvK {kvk}, Nederland). Voor alles over privacy kun je ons bereiken via {mail}.</p>'],
       ['In het kort',
         '<p>Deze app is zo gebouwd dat <strong>wij helemaal geen persoonsgegevens ontvangen</strong>. Alles wat de app onthoudt, blijft op je eigen toestel.</p>'],
       ['Wat er wordt bewaard, en waar',

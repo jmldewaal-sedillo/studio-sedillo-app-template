@@ -30,7 +30,7 @@ test('start in de taal van het toestel (Nederlands) en wisselt naar Engels', asy
   await page.locator('#btn-settings').click();
   await expect(page.locator('#screen-settings .bar-title')).toHaveText('Settings');
   await page.locator('#btn-credits').click();
-  await expect(page.locator('#credits-made-by')).toHaveText('Made by Studio Sedillo');
+  await expect(page.locator('#credits-made-by')).toHaveText('Made by Studio Sedillo · KvK 42122276');
   await page.goto('./privacy.html');
   await expect(page.locator('#page-text h1')).toHaveText('Privacy policy');
 

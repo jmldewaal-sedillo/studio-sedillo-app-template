@@ -14,7 +14,9 @@ test('privacyverklaring (NL) bevat alles uit sectie 5 van Apps/CLAUDE.md', async
   const text = page.locator('#page-text');
   await expect(page).toHaveTitle(`Privacyverklaring – ${config.APP_NAAM}`);
   await expect(text.locator('h1')).toHaveText('Privacyverklaring');
-  await expect(text).toContainText(`${config.APP_NAAM} wordt gemaakt en uitgegeven door Studio Sedillo`);
+  await expect(text).toContainText(`${config.APP_NAAM} wordt gemaakt en uitgegeven door Studio Sedillo (eenmanszaak, KvK 42122276, Nederland)`);
+  // Vaste voettekst uit Apps/CLAUDE.md, sectie 1.
+  await expect(page.locator('#page-footer')).toHaveText(`© ${new Date().getFullYear()} Studio Sedillo · KvK 42122276 · Nederland · ${MAIL}`);
   await expect(text.locator(`a[href="mailto:${MAIL}"]`).first()).toHaveText(MAIL);
   for (const part of [
     'Alleen op het toestel zelf',                         // welke gegevens, alleen lokaal
@@ -45,7 +47,8 @@ test('privacyverklaring (EN)', async ({ page }) => {
   await open(page, './privacy?lang=en');
   const text = page.locator('#page-text');
   await expect(text.locator('h1')).toHaveText('Privacy policy');
-  await expect(text).toContainText(`${config.APP_NAAM} is made and published by Studio Sedillo`);
+  await expect(text).toContainText(`${config.APP_NAAM} is made and published by Studio Sedillo (sole proprietorship, KvK 42122276, the Netherlands)`);
+  await expect(page.locator('#page-footer')).toHaveText(`© ${new Date().getFullYear()} Studio Sedillo · KvK 42122276 · the Netherlands · ${MAIL}`);
   for (const part of ['Only on the device itself', 'We share nothing with third parties', 'Autoriteit Persoonsgegevens',
     'EU-U.S. Data Privacy Framework', 'legitimate interest', 'Article 6(1)(f) GDPR', 'How long data is kept']) {
     await expect(text, part).toContainText(part);
@@ -84,6 +87,7 @@ test('verwijderpagina /delete in NL en EN, en /verwijderen verwijst door', async
   await expect(text).toContainText('Profiel verwijderen');
   await expect(text.locator(`a[href="mailto:${MAIL}"]`)).toHaveText(MAIL);
   await expect(text).not.toContainText('{');
+  await expect(page.locator('#page-footer')).toContainText('KvK 42122276');
 
   await page.goto('./verwijderen?lang=en');
   await expect(page).toHaveURL(/\/delete\.html\?lang=en$/);

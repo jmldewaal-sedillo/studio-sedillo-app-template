@@ -70,8 +70,20 @@ function allFiles(dir, base = dir, out = []) {
   return out.sort();
 }
 
+// Extra bronnen in de Content-Security-Policy van elke pagina, bijvoorbeeld de SDK van een portal
+// (bouw.config.json, "portalCsp": { "<naam>": ["https://sdk.voorbeeld.com"] }; alleen na akkoord van Jenn).
+function addCspSources(html, file, sources) {
+  if (!sources.length) return html;
+  for (const s of sources) if (!/^https:\/\/[a-z0-9.-]+(:\d+)?$/.test(s)) fail(`portalCsp: "${s}" is geen https-adres zonder pad`);
+  const extra = ' ' + sources.join(' ');
+  const out = html.replace(/(<meta http-equiv="Content-Security-Policy" content=")([^"]*)(")/, (all, a, csp, b) =>
+    a + csp.replace(/(script-src|connect-src|img-src)([^;]*)/g, `$1$2${extra}`) + `; frame-src${extra}` + b);
+  if (out === html) fail(`${file}: geen Content-Security-Policy gevonden om aan te vullen`);
+  return out;
+}
+
 // De pagina's van de app: de laag van dit bouwdoel erin, en zo nodig noindex.
-function finishPages(out, { platform, extraScripts = [], noindex, serviceWorker }) {
+function finishPages(out, { platform, extraScripts = [], noindex, serviceWorker, cspSources = [] }) {
   mkdirSync(join(out, 'platform'), { recursive: true });
   copyFileSync(join(ROOT, 'platform', `${platform}.js`), join(out, 'platform', `${platform}.js`));
   let pages = 0;
@@ -85,6 +97,7 @@ function finishPages(out, { platform, extraScripts = [], noindex, serviceWorker 
       pages++;
     }
     if (!serviceWorker) html = html.replace(/^[ \t]*<link rel="manifest"[^>]*>\r?\n/m, '');
+    html = addCspSources(html, file, cspSources);
     if (noindex && !/<meta name="robots"/.test(html)) {
       html = html.replace(/(<meta name="viewport"[^>]*>\r?\n)/, `$1  <meta name="robots" content="noindex, nofollow" />\n`);
       if (!/<meta name="robots"/.test(html)) fail(`${file}: geen plek gevonden voor de noindex-regel`);
@@ -150,7 +163,8 @@ function bouwPortal(naam) {
     copyFileSync(join(ROOT, 'platform', 'portals', `${naam}.js`), join(out, 'platform', 'portals', `${naam}.js`));
     extra.push(`platform/portals/${naam}.js`);
   }
-  finishPages(out, { platform: 'portal', extraScripts: extra, noindex: false, serviceWorker: false });
+  const cspSources = (BUILD_CONFIG.portalCsp && BUILD_CONFIG.portalCsp[naam]) || [];
+  finishPages(out, { platform: 'portal', extraScripts: extra, noindex: false, serviceWorker: false, cspSources });
   mustExist(out, ['index.html', 'platform/portal.js']);
   const target = out + '.zip';
   zip(out, target);

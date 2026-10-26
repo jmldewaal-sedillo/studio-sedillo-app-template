@@ -3,6 +3,7 @@
    Colours and sizes are variables; the theme colour comes from config.js.
    Safe zones (notch, rounded corners, home bar) via env(safe-area-inset-*).
    ============================================================ */
+.sprite { position: absolute; }
 :root {
   --theme: {{THEMA_KLEUR}};
   --on-theme: #ffffff;          /* set by common.js: white or dark, whichever reads best */
@@ -132,6 +133,7 @@ body.is-test .bar { padding-top: 8px; }
 .page li { margin-bottom: 4px; }
 .page .updated { font-style: italic; }
 .page .langs { margin: 12px 0 4px; }
+.page-footer { margin-top: 28px; font-size: 14px; color: var(--muted, inherit); }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }

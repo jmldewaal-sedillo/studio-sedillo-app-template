@@ -52,6 +52,11 @@ jobs:
         if: steps.project.outputs.er == 'true'
         run: npm ci && node tools/bouw.mjs app && npx cap sync android
 
+      # Geen cloud-back-up en geen advertentie-ID (zonder advertenties): staat het niet goed in android/, dan stopt de build.
+      - name: Vaste Android-instellingen
+        if: steps.project.outputs.er == 'true'
+        run: node tools/android-instellingen.mjs --check
+
       - name: Test-APK bouwen
         if: steps.project.outputs.er == 'true'
         working-directory: android

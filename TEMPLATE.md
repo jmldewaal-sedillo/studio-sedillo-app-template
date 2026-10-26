@@ -58,3 +58,22 @@ test in `tests/placeholders.spec.js` faalt als daar nog een placeholder in staat
 - Nieuwe sleutel in de opslag? Zet hem in `docs/privacy-audit.md` (een test controleert dat).
 - Nieuwe tekst? In elk bestand in `i18n/` (een test controleert dat).
 - Draai de tests en push naar `main`. Bestaande apps krijgen de wijziging niet vanzelf.
+
+## Vaste controles (sinds 26 oktober 2026)
+
+Deze tests en scripts bewaken de regels uit `Apps/CLAUDE.md` in elke app. Een test uitzetten mag
+niet; past iets echt niet bij een app, dan eerst Jenn vragen en de reden in de CLAUDE.md van de app.
+
+| Wat | Waar |
+|---|---|
+| Toegankelijkheid WCAG 2.1 AA (contrast, alt, knopnamen, taal) in elk scherm, elke dialoog en elke taal; reflow op 320 px | `tests/toegankelijkheid.spec.js` (axe-core) |
+| Alles met het toetsenbord; focus blijft in een dialoog en gaat terug na sluiten | `tests/toetsenbord.spec.js` |
+| Strenge Content-Security-Policy in elke pagina en elk bouwdoel; SDK van een portal via `portalCsp` in `bouw.config.json` | `tests/beveiliging.spec.js` |
+| "Voortgang overzetten": zonder `AppStorage.cleanPart` geen import; vijandige codes en kapotte opslag | `tests/beveiliging.spec.js` |
+| Android: geen cloud-back-up, geen `AD_ID` zonder advertenties | `tools/android-instellingen.mjs` (`app:init`, `app:sync`, `app.yml --check`) |
+| Store-teksten zonder "gratis", "beste", "#1", sterren, reviews of emoji; kloppend met `ADVERTENTIES`/`AANKOPEN` | `tests/inhoud.spec.js`; vóór uploaden `node tools/store-klaar.mjs` |
+| Geen trackers, session replay, Google Fonts of onbekende hosts; elk asset in `docs/credits.md` | `tests/inhoud.spec.js` |
+| Advertenties en aankopen nooit in een kinder-app; met aankopen een voorwaardenpagina | `tests/geld.spec.js`; `docs/publiceren.md`, punt 11 |
+| KvK in credits, privacyverklaring en voettekst | `tests/start.spec.js`, `tests/paginas.spec.js` |
+| Geen privégegevens, ook niet in de geschiedenis; CI stopt zonder het geheim | `.github/workflows/privacy.yml`, `ci.yml` |
+| Dependabot (npm en Actions) | `.github/dependabot.yml`; `Apps/tools/nieuwe-app.sh` zet de meldingen aan |

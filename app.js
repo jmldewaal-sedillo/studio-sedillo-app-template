@@ -28,12 +28,26 @@
     const first = document.querySelector('#screen-' + name + ' .icon-btn');
     if (first) first.focus();
   }
+  // While a modal is open the rest of the page is inert: Tab stays inside the modal and a
+  // screen reader only reads the modal. Closing it puts the focus back where it was.
+  let focusBefore = null;
+  function setBackgroundInert(on) {
+    document.querySelectorAll('.screen, #test-strip').forEach(el => { el.inert = on; });
+  }
   function showModal(name) {
+    if (!document.querySelector('.modal:not([hidden])')) focusBefore = document.activeElement;
     document.querySelectorAll('.modal').forEach(m => { m.hidden = m.id !== 'modal-' + name; });
+    setBackgroundInert(true);
     const first = document.querySelector('#modal-' + name + ' button');
     if (first) first.focus();
   }
-  function hideModals() { document.querySelectorAll('.modal').forEach(m => { m.hidden = true; }); }
+  function hideModals() {
+    document.querySelectorAll('.modal').forEach(m => { m.hidden = true; });
+    setBackgroundInert(false);
+    const back = focusBefore;
+    focusBefore = null;
+    if (back && back.isConnected && back.offsetParent !== null) back.focus();
+  }
 
   // ---------- rendering ----------
   function profileName(p) {
@@ -190,6 +204,16 @@
     });
   }
 
+  // ---------- checking a transfer code (required; see storage.js) ----------
+  // EXAMPLE: the only part this app saves is "progress" = { count }. Add every new part here.
+  Store.cleanPart = (part, value) => {
+    if (part === 'progress') {
+      const count = value && typeof value === 'object' ? value.count : undefined;
+      return Number.isInteger(count) && count >= 0 && count <= 1e9 ? { count } : undefined;
+    }
+    return undefined;                            // unknown parts are left out
+  };
+
   // ---------- events ----------
   function bind() {
     on('btn-settings', 'click', () => showScreen('settings'));
@@ -237,6 +261,18 @@
     on('btn-parent-cancel', 'click', () => { parentAction = null; resetHold(); hideModals(); });
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.querySelector('.modal:not([hidden])')) back(); });
+    // Tab and Shift+Tab go round inside an open modal instead of leaving it.
+    document.addEventListener('keydown', e => {
+      const open = document.querySelector('.modal:not([hidden])');
+      if (e.key !== 'Tab' || !open) return;
+      const items = [...open.querySelectorAll('button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])')]
+        .filter(el => !el.disabled && el.offsetParent !== null);
+      if (!items.length) return;
+      const first = items[0], last = items[items.length - 1];
+      const inside = open.contains(document.activeElement);
+      if (e.shiftKey && (document.activeElement === first || !inside)) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && (document.activeElement === last || !inside)) { e.preventDefault(); first.focus(); }
+    });
   }
 
   // ---------- one step back (Escape, and the back button of Android via Platform) ----------

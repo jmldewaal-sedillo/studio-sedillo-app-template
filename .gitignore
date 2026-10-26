@@ -8,3 +8,12 @@ dist/
 # Android signing keys: never in Git (see docs/app.md)
 *.keystore
 *.jks
+keystore.properties
+*.p12
+*.pem
+*.aab
+*.apk
+.env
+.env.*
+google-services.json
+GoogleService-Info.plist

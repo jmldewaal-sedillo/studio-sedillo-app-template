@@ -25,12 +25,17 @@ window.APP_CONFIG = {
   // children's app. See Apps/CLAUDE.md, section 11, point 5.
   ADVERTENTIES: false,
 
+  // In-app purchases (Google Play Billing / Apple). Stays false until Jenn approves; never true in a
+  // children's app. Before switching on: docs/publiceren.md, point 11 (terms page, server check).
+  AANKOPEN: false,
+
   // Languages of the app, in the order of the buttons. Each one needs a file
   // i18n/<code>.js (and a <script> tag in every HTML page, and a line in sw.js).
   TALEN: ['nl', 'en'],
 
   // Fixed for all Studio Sedillo apps.
   MAKER: 'Studio Sedillo',
+  KVK: '42122276',
   CONTACT: 'studio.sedillo@gmail.com',
 
   // Date of the last change to the privacy policy (YYYY-MM-DD). Change it

@@ -24,6 +24,7 @@
     const fill = text => text
       .split('{app}').join(App.escapeHtml(C.APP_NAAM))
       .split('{short}').join(App.escapeHtml(C.KORTE_NAAM))
+      .split('{kvk}').join(App.escapeHtml(C.KVK))
       .split('{mail}').join(mail)
       .split('{date}').join(App.escapeHtml(date))
       .split('{lock}').join(lock);
@@ -31,6 +32,8 @@
     document.getElementById('page-text').innerHTML = withoutLinks(
       '<h1>' + T.title + '</h1><p class="updated">' + fill(T.sub) + '</p>' +
       T.sections.filter(s => s[2] !== 'kids' || kids).map(s => '<h2>' + s[0] + '</h2>' + fill(s[1])).join(''));
+    // Vaste voettekst (Apps/CLAUDE.md, sectie 1); het e-mailadres als gewone tekst.
+    document.getElementById('page-footer').textContent = App.t('pageFooter');
     App.applyTexts();
   }
 

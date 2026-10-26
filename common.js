@@ -32,7 +32,7 @@
   function t(key, vars) {
     let text = TEXTS[lang] && typeof TEXTS[lang][key] === 'string' ? TEXTS[lang][key] : null;
     if (text === null) text = TEXTS[LANGS[0]] && typeof TEXTS[LANGS[0]][key] === 'string' ? TEXTS[LANGS[0]][key] : key;
-    const all = Object.assign({ app: C.APP_NAAM, short: C.KORTE_NAAM, mail: C.CONTACT }, vars || {});
+    const all = Object.assign({ app: C.APP_NAAM, short: C.KORTE_NAAM, mail: C.CONTACT, kvk: C.KVK, year: new Date().getFullYear() }, vars || {});
     return text.replace(/\{(\w+)\}/g, (whole, name) => (name in all ? String(all[name]) : whole));
   }
 

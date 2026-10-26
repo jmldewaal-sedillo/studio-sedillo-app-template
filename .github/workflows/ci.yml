@@ -39,11 +39,17 @@ jobs:
           fi
 
       # Vangnet: geen privégegevens (huisadres) online. De lijst komt uit het geheim
-      # PRIVATE_BLOCKLIST; zonder geheim volgt een waarschuwing en gaat de run door.
+      # PRIVATE_BLOCKLIST en wordt nooit getoond. Ontbreekt het geheim bij een push, dan stopt de run:
+      # zonder lijst controleert deze stap niets. (Pull requests van buiten krijgen geen geheimen.)
       - name: Controle op privégegevens
         env:
           PRIVATE_BLOCKLIST: ${{ secrets.PRIVATE_BLOCKLIST }}
-        run: python3 tests/no-private-data.py --ci
+        run: |
+          if [ -z "$PRIVATE_BLOCKLIST" ] && [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "::error::Het geheim PRIVATE_BLOCKLIST ontbreekt in deze repo. Zet het met Apps/tools/sync-blocklist.sh."
+            exit 1
+          fi
+          python3 tests/no-private-data.py --ci
 
       - uses: actions/setup-node@v4
         with:
