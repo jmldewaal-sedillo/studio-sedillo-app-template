@@ -17,14 +17,14 @@
     "ios:open": "cap open ios"
   },
   "dependencies": {
-    "@capacitor/android": "8.5.3",
+    "@capacitor/android": "8.6.0",
     "@capacitor/app": "8.1.2",
-    "@capacitor/core": "8.5.3",
-    "@capacitor/ios": "8.5.3"
+    "@capacitor/core": "8.6.0",
+    "@capacitor/ios": "8.6.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",
-    "@capacitor/cli": "8.5.3",
+    "@capacitor/cli": "8.6.0",
     "@playwright/test": "1.63.0"
   }
 }
