@@ -114,7 +114,7 @@ jobs:
 
       - name: Publiceren
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
       - name: Adres in de samenvatting
         run: echo "Gepubliceerd op ${{ steps.deployment.outputs.page_url }} (${GITHUB_SHA::7})" >> "$GITHUB_STEP_SUMMARY"
