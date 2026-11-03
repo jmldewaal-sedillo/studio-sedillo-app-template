@@ -36,7 +36,7 @@ jobs:
             echo "Nog geen android/: eerst npm run app:init (docs/app.md)." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         if: steps.project.outputs.er == 'true'
         with:
           node-version: 22
@@ -93,7 +93,7 @@ jobs:
             echo "Nog geen ios/: eerst npm run app:init (docs/app.md)." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         if: steps.project.outputs.er == 'true'
         with:
           node-version: 22
