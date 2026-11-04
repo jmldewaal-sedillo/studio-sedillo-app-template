@@ -265,7 +265,7 @@
     document.addEventListener('keydown', e => {
       const open = document.querySelector('.modal:not([hidden])');
       if (e.key !== 'Tab' || !open) return;
-      const items = [...open.querySelectorAll('button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])')]
+      const items = [...open.querySelectorAll('button, a[href], input, textarea, select, [tabindex]:not([tabindex="-1"])')]
         .filter(el => !el.disabled && el.offsetParent !== null);
       if (!items.length) return;
       const first = items[0], last = items[items.length - 1];

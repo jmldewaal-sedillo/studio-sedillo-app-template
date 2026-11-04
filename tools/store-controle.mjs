@@ -4,17 +4,20 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
 // Woorden die Google Play en Apple niet willen zien, of die we niet kunnen bewijzen.
+// Hele woorden, ook naast letters als ä of é ("bestätigen" bevat geen "best"): \b van JavaScript kent alleen a-z.
+const woord = (bron, flags = 'iu') => new RegExp(`(?<![\\p{L}\\p{N}_])(?:${bron})(?![\\p{L}\\p{N}_])`, flags);
 export const VERBODEN = [
-  /\b(gratis|free|freemium)\b/i,
-  /\b(beste|best|leukste|most fun|greatest|ultieme?|ultimate|nummer (één|1)|number one|nr\.? ?1)\b/i,
+  woord('gratis|free|freemium'),
+  woord('beste|best|leukste|most fun|greatest|ultieme?|ultimate|nummer (één|1)|number one|nr\\.? ?1'),
   /#\s?1\b/,
-  /\btop[ -]?\d+\b/i,
-  /\b(award|prijswinnende?|award-winning|winnaar|winner)\b/i,
-  /\b(gegarandeerd|guaranteed|bewezen|proven|wetenschappelijk|scientifically)\b/i,
-  /\b(goedgekeurd door (docenten|leraren)|teacher[- ]approved|aanbevolen door|recommended by)\b/i,
-  /\b(miljoen|million|\d+[.,]?\d*\s?(k|m)\+? (spelers|players|downloads))\b/i,
-  /\b\d\s?(sterren|stars)\b/i,
+  woord('top[ -]?\\d+'),
+  woord('award|prijswinnende?|award-winning|winnaar|winner'),
+  woord('gegarandeerd|guaranteed|bewezen|proven|wetenschappelijk|scientifically'),
+  woord('goedgekeurd door (docenten|leraren)|teacher[- ]approved|aanbevolen door|recommended by'),
+  woord('miljoen|million|\\d+[.,]?\\d*\\s?(k|m)\\+? (spelers|players|downloads)'),
+  woord('\\d\\s?(sterren|stars)'),
   /[★☆⭐]/,
+  woord('het meest \\p{L}+e|most (absurd|fun|addictive|popular|hilarious)|op aarde|on earth|populairste?|popular|verslavend|addictive'),
 ];
 // Een citaat met een naam erachter lijkt op een review ("Geweldig!" – Lisa).
 export const REVIEW = /["“„«][^"”»]{3,120}["”»]\s*[–—-]\s*\p{Lu}/u;

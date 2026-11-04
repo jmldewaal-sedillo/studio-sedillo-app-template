@@ -27,6 +27,9 @@ test('de controle werkt echt: verboden woorden, een review en tegenspraak met co
   expect(controleerTekst('INVULLEN: tekst', { config: zonder, klaar: true })).toHaveLength(1);
   expect(controleerTekst('INVULLEN: tekst', { config: zonder })).toEqual([]);
   expect(controleerTekst('Puzzels voor kinderen, zonder advertenties.', { config: zonder })).toEqual([]);
+  expect(controleerTekst('Het meest absurde spel op aarde, en populair', { config: zonder })).toHaveLength(1);
+  // Hele woorden, ook naast letters als ä: "bestätige" is geen "best".
+  expect(controleerTekst('Bitte bestätige das. Überbest? Nee: bestand, gratisweg', { config: zonder })).toEqual([]);
 });
 
 test('teksten in de app: geen loze beloftes in de vertalingen en het manifest', async () => {
