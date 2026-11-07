@@ -76,4 +76,4 @@ niet; past iets echt niet bij een app, dan eerst Jenn vragen en de reden in de C
 | Advertenties en aankopen nooit in een kinder-app; met aankopen een voorwaardenpagina | `tests/geld.spec.js`; `docs/publiceren.md`, punt 11 |
 | KvK in credits, privacyverklaring en voettekst | `tests/start.spec.js`, `tests/paginas.spec.js` |
 | Geen privégegevens, ook niet in de geschiedenis; CI stopt zonder het geheim | `.github/workflows/privacy.yml`, `ci.yml` |
-| Dependabot (npm en Actions) | `.github/dependabot.yml`; `Apps/tools/nieuwe-app.sh` zet de meldingen aan |
+| Dependabot (npm en Actions), alleen in de hoofdrepo | `.github/dependabot.yml`; `Apps/tools/nieuwe-app.sh` zet de meldingen aan en zet Dependabot in de test-repo uit (`Apps/tools/test-repo-dependabot-uit.sh`) |
